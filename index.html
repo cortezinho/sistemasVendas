@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Vendas</title>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h2,
+        h3 {
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        input,
+        textarea,
+        select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--secondary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-save {
+            background: var(--secondary);
+            flex-grow: 1;
+        }
+
+        .btn-export {
+            background: var(--primary);
+        }
+
+        .btn-import {
+            background: #7f8c8d;
+        }
+
+        .btn-edit {
+            background: var(--warning);
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: var(--light);
+        }
+
+        .status-pago {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .status-pendente {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 5px;
+        }
+
+        .obs-texto {
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            color: #2980b9;
+            font-weight: bold;
+        }
+
+        .obs-texto:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>📝 Sistema de Vendas</h2>
+
+        <form id="venda-form">
+
+            <div class="grid-form">
+
+                <input type="text" id="cliente" placeholder="Cliente" required>
+
+                <input type="date" id="data" required>
+
+                <input type="text" id="item" placeholder="Item comprado" required>
+
+                <input type="number" id="quantidade" placeholder="Quantidade" min="1" required>
+
+                <input type="number" id="valor" placeholder="Valor unitário" step="0.01" required>
+
+                <select id="parcelamento">
+
+                    <option value="À vista">À vista</option>
+
+                    <option value="1x">1x</option>
+                    <option value="2x">2x</option>
+                    <option value="3x">3x</option>
+                    <option value="4x">4x</option>
+                    <option value="5x">5x</option>
+                    <option value="6x">6x</option>
+                    <option value="7x">7x</option>
+                    <option value="8x">8x</option>
+                    <option value="9x">9x</option>
+                    <option value="10x">10x</option>
+                    <option value="11x">11x</option>
+                    <option value="12x">12x</option>
+
+                </select>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="pago">
+                    <label for="pago">Já está pago?</label>
+                </div>
+
+                <textarea id="obs1" class="full-width" placeholder="Observação 1"></textarea>
+
+                <textarea id="obs2" class="full-width" placeholder="Observação 2"></textarea>
+
+            </div>
+
+            <div class="actions-bar">
+
+                <button type="submit" class="btn-save" id="btnSalvar">
+                    💾 Salvar Venda
+                </button>
+
+                <button type="button" class="btn-export" onclick="exportarDados()">
+                    📤 Exportar JSON
+                </button>
+
+                <input type="file" id="importar-file" style="display:none" accept=".json"
+                    onchange="importarDados(event)">
+
+                <button type="button" class="btn-import" onclick="document.getElementById('importar-file').click()">
+                    📥 Importar JSON
+                </button>
+
+            </div>
+
+        </form>
+
+        <h3>📋 Vendas Registradas</h3>
+
+        <div class="table-container">
+
+            <table id="vendas-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Item</th>
+                        <th>Qtd</th>
+                        <th>Valor</th>
+                        <th>Parcelamento</th>
+                        <th>Status</th>
+                        <th>Obs 1</th>
+                        <th>Obs 2</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const form = document.getElementById('venda-form');
+
+        const tableBody =
+            document.querySelector('#vendas-table tbody');
+
+        const btnSalvar =
+            document.getElementById('btnSalvar');
+
+        let editandoId = null;
+
+        // ==========================
+        // INICIAR
+        // ==========================
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            exibirVendas();
+
+            restaurarFormulario();
+
+        });
+
+        // ==========================
+        // AUTO SAVE FORMULÁRIO
+        // ==========================
+
+        const camposFormulario = [
+            'cliente',
+            'data',
+            'item',
+            'quantidade',
+            'valor',
+            'parcelamento',
+            'pago',
+            'obs1',
+            'obs2'
+        ];
+
+        camposFormulario.forEach(id => {
+
+            const campo = document.getElementById(id);
+
+            campo.addEventListener(
+                'input',
+                salvarRascunho
+            );
+
+            campo.addEventListener(
+                'change',
+                salvarRascunho
+            );
+
+        });
+
+        function salvarRascunho() {
+
+            const rascunho = {
+
+                cliente:
+                    document.getElementById('cliente').value,
+
+                data:
+                    document.getElementById('data').value,
+
+                item:
+                    document.getElementById('item').value,
+
+                quantidade:
+                    document.getElementById('quantidade').value,
+
+                valor:
+                    document.getElementById('valor').value,
+
+                parcelamento:
+                    document.getElementById('parcelamento').value,
+
+                pago:
+                    document.getElementById('pago').checked,
+
+                obs1:
+                    document.getElementById('obs1').value,
+
+                obs2:
+                    document.getElementById('obs2').value
+
+            };
+
+            localStorage.setItem(
+                'rascunhoVenda',
+                JSON.stringify(rascunho)
+            );
+
+        }
+
+        function restaurarFormulario() {
+
+            const rascunho = JSON.parse(
+                localStorage.getItem('rascunhoVenda') || 'null'
+            );
+
+            if (!rascunho) return;
+
+            document.getElementById('cliente').value =
+                rascunho.cliente || '';
+
+            document.getElementById('data').value =
+                rascunho.data || '';
+
+            document.getElementById('item').value =
+                rascunho.item || '';
+
+            document.getElementById('quantidade').value =
+                rascunho.quantidade || '';
+
+            document.getElementById('valor').value =
+                rascunho.valor || '';
+
+            document.getElementById('parcelamento').value =
+                rascunho.parcelamento || 'À vista';
+
+            document.getElementById('pago').checked =
+                rascunho.pago || false;
+
+            document.getElementById('obs1').value =
+                rascunho.obs1 || '';
+
+            document.getElementById('obs2').value =
+                rascunho.obs2 || '';
+
+        }
+
+        // ==========================
+        // SALVAR / EDITAR
+        // ==========================
+
+        form.addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            const venda = {
+
+                id: editandoId || Date.now(),
+
+                cliente:
+                    document.getElementById('cliente').value,
+
+                data:
+                    document.getElementById('data').value,
+
+                item:
+                    document.getElementById('item').value,
+
+                quantidade:
+                    document.getElementById('quantidade').value,
+
+                valor:
+                    document.getElementById('valor').value,
+
+                parcelamento:
+                    document.getElementById('parcelamento').value,
+
+                pago:
+                    document.getElementById('pago').checked,
+
+                obs1:
+                    document.getElementById('obs1').value,
+
+                obs2:
+                    document.getElementById('obs2').value
+
+            };
+
+            let vendas = JSON.parse(
+                localStorage.getItem('vendas') || '[]'
+            );
+
+            if (editandoId) {
+
+                vendas = vendas.map(v =>
+                    v.id === editandoId ? venda : v
+                );
+
+                editandoId = null;
+
+                btnSalvar.innerHTML =
+                    '💾 Salvar Venda';
+
+            } else {
+
+                vendas.push(venda);
+
+            }
+
+            localStorage.setItem(
+                'vendas',
+                JSON.stringify(vendas)
+            );
+
+            localStorage.removeItem('rascunhoVenda');
+
+            form.reset();
+
+            document.getElementById('parcelamento').value =
+                'À vista';
+
+            exibirVendas();
+
+        });
+
+        // ==========================
+        // EXIBIR VENDAS
+        // ==========================
+
+        function exibirVendas() {
+
+            const vendas = JSON.parse(
+                localStorage.getItem('vendas') || '[]'
+            );
+
+            tableBody.innerHTML = '';
+
+            vendas.sort((a, b) =>
+                new Date(b.data) - new Date(a.data)
+            );
+
+            vendas.forEach(venda => {
+
+                const tr =
+                    document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td>${venda.cliente}</td>
+
+                    <td>${formatarData(venda.data)}</td>
+
+                    <td>${venda.item}</td>
+
+                    <td>${venda.quantidade}</td>
+
+                    <td>
+                        R$ ${parseFloat(venda.valor).toFixed(2)}
+                    </td>
+
+                    <td>${venda.parcelamento}</td>
+
+                    <td class="${venda.pago
+                        ? 'status-pago'
+                        : 'status-pendente'
+                    }">
+
+                        ${venda.pago
+                        ? '✔ Pago'
+                        : '⏳ Pendente'
+                    }
+
+                    </td>
+
+                    <td>
+    <div
+        class="obs-texto"
+        onclick='mostrarObservacao(${JSON.stringify(venda.obs1 || "")})'
+    >
+        ${venda.obs1 || '-'}
+    </div>
+</td>
+
+<td>
+    <div
+        class="obs-texto"
+        onclick='mostrarObservacao(${JSON.stringify(venda.obs2 || "")})'
+    >
+        ${venda.obs2 || '-'}
+    </div>
+</td>
+
+                    <td>
+
+                        <div class="acoes">
+
+                            <button
+                                class="btn-edit"
+                                onclick="editarVenda(${venda.id})"
+                            >
+                                Editar
+                            </button>
+
+                            <button
+                                class="btn-delete"
+                                onclick="removerVenda(${venda.id})"
+                            >
+                                Excluir
+                            </button>
+
+                        </div>
+
+                    </td>
+                `;
+
+                tableBody.appendChild(tr);
+
+            });
+
+        }
+
+        // ==========================
+        // MOSTRAR OBSERVAÇÃO
+        // ==========================
+
+        function mostrarObservacao(texto) {
+
+            if (!texto || texto.trim() === '') {
+
+                alert('Nenhuma observação.');
+
+                return;
+
+            }
+
+            alert(texto);
+
+        }
+
+        // ==========================
+        // EDITAR
+        // ==========================
+
+        function editarVenda(id) {
+
+            const vendas = JSON.parse(
+                localStorage.getItem('vendas') || '[]'
+            );
+
+            const venda =
+                vendas.find(v => v.id === id);
+
+            if (!venda) return;
+
+            document.getElementById('cliente').value =
+                venda.cliente;
+
+            document.getElementById('data').value =
+                venda.data;
+
+            document.getElementById('item').value =
+                venda.item;
+
+            document.getElementById('quantidade').value =
+                venda.quantidade;
+
+            document.getElementById('valor').value =
+                venda.valor;
+
+            document.getElementById('parcelamento').value =
+                venda.parcelamento;
+
+            document.getElementById('pago').checked =
+                venda.pago;
+
+            document.getElementById('obs1').value =
+                venda.obs1;
+
+            document.getElementById('obs2').value =
+                venda.obs2;
+
+            editandoId = id;
+
+            btnSalvar.innerHTML =
+                '✏️ Atualizar Venda';
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+        }
+
+        // ==========================
+        // REMOVER
+        // ==========================
+
+        function removerVenda(id) {
+
+            if (
+                confirm(
+                    'Tem certeza que deseja excluir este registro?'
+                )
+            ) {
+
+                let vendas = JSON.parse(
+                    localStorage.getItem('vendas') || '[]'
+                );
+
+                vendas = vendas.filter(
+                    v => v.id !== id
+                );
+
+                localStorage.setItem(
+                    'vendas',
+                    JSON.stringify(vendas)
+                );
+
+                exibirVendas();
+
+            }
+
+        }
+
+        // ==========================
+        // EXPORTAR
+        // ==========================
+
+        async function exportarDados() {
+
+            try {
+
+                const dados =
+                    localStorage.getItem('vendas') || '[]';
+
+                if (dados === '[]') {
+
+                    alert(
+                        'Não há dados para exportar.'
+                    );
+
+                    return;
+
+                }
+
+                const fileHandle =
+                    await window.showSaveFilePicker({
+
+                        suggestedName: 'vendas.json',
+
+                        types: [
+                            {
+                                description: 'Arquivo JSON',
+
+                                accept: {
+                                    'application/json': ['.json']
+                                }
+                            }
+                        ]
+
+                    });
+
+                const writable =
+                    await fileHandle.createWritable();
+
+                await writable.write(dados);
+
+                await writable.close();
+
+                alert(
+                    'Arquivo atualizado com sucesso!'
+                );
+
+            } catch (err) {
+
+                console.log(err);
+
+                alert(
+                    'Exportação cancelada.'
+                );
+
+            }
+
+        }
+
+        // ==========================
+        // IMPORTAR
+        // ==========================
+
+        function importarDados(event) {
+
+            const arquivo =
+                event.target.files[0];
+
+            if (!arquivo) return;
+
+            const reader =
+                new FileReader();
+
+            reader.onload = function (e) {
+
+                try {
+
+                    const conteudo = JSON.parse(
+                        e.target.result
+                    );
+
+                    if (
+                        Array.isArray(conteudo)
+                    ) {
+
+                        if (
+                            confirm(
+                                'Isso substituirá os dados atuais. Deseja continuar?'
+                            )
+                        ) {
+
+                            localStorage.setItem(
+                                'vendas',
+                                JSON.stringify(conteudo)
+                            );
+
+                            exibirVendas();
+
+                            alert(
+                                'Dados importados com sucesso!'
+                            );
+
+                        }
+
+                    } else {
+
+                        alert(
+                            'Arquivo inválido.'
+                        );
+
+                    }
+
+                } catch {
+
+                    alert(
+                        'Erro ao ler arquivo.'
+                    );
+
+                }
+
+            };
+
+            reader.readAsText(arquivo);
+
+            event.target.value = '';
+
+        }
+
+        // ==========================
+        // FORMATAR DATA
+        // ==========================
+
+        function formatarData(dataString) {
+
+            const partes =
+                dataString.split('-');
+
+            return `
+                ${partes[2]}/
+                ${partes[1]}/
+                ${partes[0]}
+            `.replace(/\s/g, '');
+
+        }
+
+    </script>
+
+</body>
+
+</html>
