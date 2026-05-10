@@ -129,6 +129,7 @@
 
         .table-container {
             overflow-x: auto;
+
         }
 
         table {
@@ -147,6 +148,10 @@
 
         th {
             background: var(--light);
+            text-align: center;
+            border-color: #d1d1d1;
+            border-left-style: solid;
+            border-right-style: solid;
         }
 
         .status-pago {
@@ -165,7 +170,7 @@
         }
 
         .obs-texto {
-            max-width: 250px;
+            max-width: 130px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -182,6 +187,20 @@
             text-align: center;
             color: #777;
             padding: 20px;
+        }
+
+        /* Estilo para a barra de busca */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        #busca-cliente {
+            border: 2px solid var(--light);
+            background-color: #fff;
+        }
+
+        #busca-cliente:focus {
+            border-color: var(--primary);
         }
 
         @media (max-width: 768px) {
@@ -214,30 +233,16 @@
 
                 <input type="date" id="data" required>
 
-                <textarea
-                    id="item"
-                    placeholder="Item comprado"
-                    required
-                ></textarea>
+                <textarea id="item" placeholder="Item comprado" required></textarea>
 
                 <input type="number" id="valor" placeholder="Valor" step="0.01" min="0" required>
 
                 <select id="parcelamento">
-
                     <option value="À vista">À vista</option>
                     <option value="1x">1x</option>
                     <option value="2x">2x</option>
                     <option value="3x">3x</option>
                     <option value="4x">4x</option>
-                    <option value="5x">5x</option>
-                    <option value="6x">6x</option>
-                    <option value="7x">7x</option>
-                    <option value="8x">8x</option>
-                    <option value="9x">9x</option>
-                    <option value="10x">10x</option>
-                    <option value="11x">11x</option>
-                    <option value="12x">12x</option>
-
                 </select>
 
                 <div class="checkbox-group">
@@ -259,19 +264,10 @@
                     Exportar CSV
                 </button>
 
-                <input
-                    type="file"
-                    id="importar-file"
-                    style="display:none"
-                    accept=".csv"
-                    onchange="importarDados(event)"
-                >
+                <input type="file" id="importar-file" style="display:none" accept=".csv"
+                    onchange="importarDados(event)">
 
-                <button
-                    type="button"
-                    class="btn-import"
-                    onclick="document.getElementById('importar-file').click()"
-                >
+                <button type="button" class="btn-import" onclick="document.getElementById('importar-file').click()">
                     Importar CSV
                 </button>
 
@@ -281,12 +277,15 @@
 
         <h3>Vendas Registradas</h3>
 
+        <div class="search-container">
+            <input type="text" id="busca-cliente" placeholder="Filtrar por nome do cliente..." oninput="exibirVendas()">
+        </div>
+
         <div class="table-container">
 
             <table id="vendas-table">
 
                 <thead>
-
                     <tr>
                         <th>Cliente</th>
                         <th>Data</th>
@@ -297,7 +296,6 @@
                         <th>Observação</th>
                         <th>Ações</th>
                     </tr>
-
                 </thead>
 
                 <tbody></tbody>
@@ -309,23 +307,14 @@
     </div>
 
     <script>
-
         const form = document.getElementById('venda-form');
-
-        const tableBody =
-            document.querySelector('#vendas-table tbody');
-
-        const btnSalvar =
-            document.getElementById('btnSalvar');
-
+        const tableBody = document.querySelector('#vendas-table tbody');
+        const btnSalvar = document.getElementById('btnSalvar');
         let editandoId = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-
             exibirVendas();
-
             restaurarFormulario();
-
         });
 
         const camposFormulario = [
@@ -339,392 +328,194 @@
         ];
 
         camposFormulario.forEach(id => {
-
             const campo = document.getElementById(id);
-
             campo.addEventListener('input', salvarRascunho);
-
             campo.addEventListener('change', salvarRascunho);
-
         });
 
         function gerarIdUnico() {
-
             return crypto.randomUUID();
-
         }
 
         function salvarRascunho() {
-
             const rascunho = obterDadosFormulario();
-
-            localStorage.setItem(
-                'rascunhoVenda',
-                JSON.stringify(rascunho)
-            );
-
+            localStorage.setItem('rascunhoVenda', JSON.stringify(rascunho));
         }
 
         function restaurarFormulario() {
-
-            const rascunho = JSON.parse(
-                localStorage.getItem('rascunhoVenda') || 'null'
-            );
-
+            const rascunho = JSON.parse(localStorage.getItem('rascunhoVenda') || 'null');
             if (!rascunho) return;
-
             preencherFormulario(rascunho);
-
         }
 
         function obterDadosFormulario() {
-
             return {
-
-                cliente:
-                    document.getElementById('cliente').value.trim(),
-
-                data:
-                    document.getElementById('data').value,
-
-                item:
-                    document.getElementById('item').value.trim(),
-
-                valor:
-                    document.getElementById('valor').value,
-
-                parcelamento:
-                    document.getElementById('parcelamento').value,
-
-                pago:
-                    document.getElementById('pago').checked,
-
-                obs1:
-                    document.getElementById('obs1').value.trim()
-
+                cliente: document.getElementById('cliente').value.trim(),
+                data: document.getElementById('data').value,
+                item: document.getElementById('item').value.trim(),
+                valor: document.getElementById('valor').value,
+                parcelamento: document.getElementById('parcelamento').value,
+                pago: document.getElementById('pago').checked,
+                obs1: document.getElementById('obs1').value.trim()
             };
-
         }
 
         function preencherFormulario(venda) {
-
-            document.getElementById('cliente').value =
-                venda.cliente || '';
-
-            document.getElementById('data').value =
-                venda.data || '';
-
-            document.getElementById('item').value =
-                venda.item || '';
-
-            document.getElementById('valor').value =
-                venda.valor || '';
-
-            document.getElementById('parcelamento').value =
-                venda.parcelamento || 'À vista';
-
-            document.getElementById('pago').checked =
-                venda.pago || false;
-
-            document.getElementById('obs1').value =
-                venda.obs1 || '';
-
+            document.getElementById('cliente').value = venda.cliente || '';
+            document.getElementById('data').value = venda.data || '';
+            document.getElementById('item').value = venda.item || '';
+            document.getElementById('valor').value = venda.valor || '';
+            document.getElementById('parcelamento').value = venda.parcelamento || 'À vista';
+            document.getElementById('pago').checked = venda.pago || false;
+            document.getElementById('obs1').value = venda.obs1 || '';
         }
 
         form.addEventListener('submit', function (e) {
-
             e.preventDefault();
-
             const venda = {
-
                 id: editandoId || gerarIdUnico(),
-
                 ...obterDadosFormulario()
-
             };
 
-            let vendas = JSON.parse(
-                localStorage.getItem('vendas') || '[]'
-            );
+            let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
 
             if (editandoId) {
-
-                vendas = vendas.map(v =>
-                    v.id === editandoId ? venda : v
-                );
-
+                vendas = vendas.map(v => v.id === editandoId ? venda : v);
                 editandoId = null;
-
-                btnSalvar.innerHTML =
-                    'Salvar Venda';
-
+                btnSalvar.innerHTML = 'Salvar Venda';
             } else {
-
                 vendas.push(venda);
-
             }
 
-            localStorage.setItem(
-                'vendas',
-                JSON.stringify(vendas)
-            );
-
+            localStorage.setItem('vendas', JSON.stringify(vendas));
             localStorage.removeItem('rascunhoVenda');
-
             form.reset();
-
-            document.getElementById('parcelamento').value =
-                'À vista';
-
+            document.getElementById('parcelamento').value = 'À vista';
             exibirVendas();
-
         });
 
         function exibirVendas() {
-
-            const vendas = JSON.parse(
-                localStorage.getItem('vendas') || '[]'
-            );
+            const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+            const termoBusca = document.getElementById('busca-cliente').value.toLowerCase();
 
             tableBody.innerHTML = '';
 
-            if (vendas.length === 0) {
-
-                const tr = document.createElement('tr');
-
-                const td = document.createElement('td');
-
-                td.colSpan = 8;
-
-                td.className = 'vazio';
-
-                td.textContent = 'Nenhuma venda registrada.';
-
-                tr.appendChild(td);
-
-                tableBody.appendChild(tr);
-
-                return;
-
-            }
-
-            vendas.sort((a, b) =>
-                new Date(b.data) - new Date(a.data)
+            // Lógica de filtragem por cliente
+            const vendasFiltradas = vendas.filter(venda =>
+                venda.cliente.toLowerCase().includes(termoBusca)
             );
 
-            vendas.forEach(venda => {
+            if (vendasFiltradas.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 8;
+                td.className = 'vazio';
+                td.textContent = termoBusca ? 'Nenhum cliente encontrado.' : 'Nenhuma venda registrada.';
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+                return;
+            }
 
-                const tr =
-                    document.createElement('tr');
+            vendasFiltradas.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            vendasFiltradas.forEach(venda => {
+                const tr = document.createElement('tr');
 
                 tr.appendChild(criarTd(venda.cliente));
-
                 tr.appendChild(criarTd(formatarData(venda.data)));
-
-                tr.appendChild(
-                    criarObservacaoTd(venda.item)
-                );
-
-                tr.appendChild(
-                    criarTd(formatarMoeda(venda.valor))
-                );
-
+                tr.appendChild(criarObservacaoTd(venda.item));
+                tr.appendChild(criarTd(formatarMoeda(venda.valor)));
                 tr.appendChild(criarTd(venda.parcelamento));
 
                 const statusTd = document.createElement('td');
-
-                statusTd.className =
-                    venda.pago
-                        ? 'status-pago'
-                        : 'status-pendente';
-
-                statusTd.textContent =
-                    venda.pago
-                        ? 'Pago'
-                        : 'Pendente';
-
+                statusTd.className = venda.pago ? 'status-pago' : 'status-pendente';
+                statusTd.textContent = venda.pago ? 'Pago' : 'Pendente';
                 tr.appendChild(statusTd);
 
-                tr.appendChild(
-                    criarObservacaoTd(venda.obs1)
-                );
+                tr.appendChild(criarObservacaoTd(venda.obs1));
 
-                const acoesTd =
-                    document.createElement('td');
-
-                const acoesDiv =
-                    document.createElement('div');
-
+                const acoesTd = document.createElement('td');
+                const acoesDiv = document.createElement('div');
                 acoesDiv.className = 'acoes';
 
-                const btnEditar =
-                    document.createElement('button');
-
+                const btnEditar = document.createElement('button');
                 btnEditar.className = 'btn-edit';
-
                 btnEditar.textContent = 'Editar';
+                btnEditar.onclick = () => editarVenda(venda.id);
 
-                btnEditar.onclick = () =>
-                    editarVenda(venda.id);
-
-                const btnExcluir =
-                    document.createElement('button');
-
+                const btnExcluir = document.createElement('button');
                 btnExcluir.className = 'btn-delete';
-
                 btnExcluir.textContent = 'Excluir';
-
-                btnExcluir.onclick = () =>
-                    removerVenda(venda.id);
+                btnExcluir.onclick = () => removerVenda(venda.id);
 
                 acoesDiv.appendChild(btnEditar);
-
                 acoesDiv.appendChild(btnExcluir);
-
                 acoesTd.appendChild(acoesDiv);
-
                 tr.appendChild(acoesTd);
 
                 tableBody.appendChild(tr);
-
             });
-
         }
 
         function criarTd(texto) {
-
-            const td =
-                document.createElement('td');
-
+            const td = document.createElement('td');
             td.textContent = texto;
-
             return td;
-
         }
 
         function criarObservacaoTd(texto) {
-
-            const td =
-                document.createElement('td');
-
-            const div =
-                document.createElement('div');
-
+            const td = document.createElement('td');
+            const div = document.createElement('div');
             div.className = 'obs-texto';
-
-            div.textContent =
-                texto || '-';
-
-            div.onclick = () =>
-                mostrarObservacao(texto);
-
+            div.textContent = texto || '-';
+            div.onclick = () => mostrarObservacao(texto);
             td.appendChild(div);
-
             return td;
-
         }
 
         function mostrarObservacao(texto) {
-
             if (!texto || texto.trim() === '') {
-
                 alert('Nenhuma observação.');
-
                 return;
-
             }
-
             alert(texto);
-
         }
 
         function editarVenda(id) {
-
-            const vendas = JSON.parse(
-                localStorage.getItem('vendas') || '[]'
-            );
-
-            const venda =
-                vendas.find(v => v.id === id);
-
+            const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+            const venda = vendas.find(v => v.id === id);
             if (!venda) return;
 
             preencherFormulario(venda);
-
             editandoId = id;
-
-            btnSalvar.innerHTML =
-                'Atualizar Venda';
-
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-
+            btnSalvar.innerHTML = 'Atualizar Venda';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function removerVenda(id) {
-
-            if (
-                confirm(
-                    'Tem certeza que deseja excluir este registro?'
-                )
-            ) {
-
-                let vendas = JSON.parse(
-                    localStorage.getItem('vendas') || '[]'
-                );
-
-                vendas = vendas.filter(
-                    v => v.id !== id
-                );
-
-                localStorage.setItem(
-                    'vendas',
-                    JSON.stringify(vendas)
-                );
-
+            if (confirm('Tem certeza que deseja excluir este registro?')) {
+                let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+                vendas = vendas.filter(v => v.id !== id);
+                localStorage.setItem('vendas', JSON.stringify(vendas));
                 exibirVendas();
-
             }
-
         }
 
         function formatarMoeda(valor) {
-
-            return Number(valor).toLocaleString(
-                'pt-BR',
-                {
-                    style: 'currency',
-                    currency: 'BRL'
-                }
-            );
-
+            return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
         async function exportarDados() {
-
             try {
-
-                const vendas = JSON.parse(
-                    localStorage.getItem('vendas') || '[]'
-                );
-
+                const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
                 if (vendas.length === 0) {
-
                     alert('Não há dados para exportar.');
-
                     return;
-
                 }
 
-                let csv =
-                    'Cliente,Data,Item,Valor,Parcelamento,Status,Observacao\n';
-
+                let csv = 'Cliente,Data,Item,Valor,Parcelamento,Status,Observacao\n';
                 vendas.forEach(venda => {
-
                     const linha = [
-
                         venda.cliente,
                         venda.data,
                         venda.item,
@@ -732,269 +523,126 @@
                         venda.parcelamento,
                         venda.pago ? 'Pago' : 'Pendente',
                         venda.obs1 || ''
-
-                    ].map(valor =>
-                        `"${String(valor).replace(/"/g, '""')}"`
-                    ).join(',');
-
+                    ].map(valor => `"${String(valor).replace(/"/g, '""')}"`).join(',');
                     csv += linha + '\n';
-
                 });
 
-                const blob = new Blob(
-                    [csv],
-                    {
-                        type: 'text/csv;charset=utf-8;'
-                    }
-                );
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
                 if ('showSaveFilePicker' in window) {
-
-                    const fileHandle =
-                        await window.showSaveFilePicker({
-
-                            suggestedName: 'vendas.csv',
-
-                            types: [
-                                {
-                                    description: 'Arquivo CSV',
-
-                                    accept: {
-                                        'text/csv': ['.csv']
-                                    }
-                                }
-                            ]
-
-                        });
-
-                    const writable =
-                        await fileHandle.createWritable();
-
+                    const fileHandle = await window.showSaveFilePicker({
+                        suggestedName: 'vendas.csv',
+                        types: [{ description: 'Arquivo CSV', accept: { 'text/csv': ['.csv'] } }]
+                    });
+                    const writable = await fileHandle.createWritable();
                     await writable.write(blob);
-
                     await writable.close();
-
                     alert('CSV exportado com sucesso!');
-
                     return;
-
                 }
 
-                const link =
-                    document.createElement('a');
-
-                const url =
-                    URL.createObjectURL(blob);
-
-                link.href = url;
-
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
                 link.download = 'vendas.csv';
-
                 document.body.appendChild(link);
-
                 link.click();
-
                 document.body.removeChild(link);
-
-                URL.revokeObjectURL(url);
-
-                alert(
-                    'CSV exportado.\n\n' +
-                    'No Firefox, para escolher onde salvar:\n' +
-                    'Configurações > Geral > Arquivos e aplicativos > "Sempre perguntar onde salvar arquivos".'
-                );
-
+                alert('CSV exportado com sucesso!');
             } catch (err) {
-
                 console.log(err);
-
                 alert('Exportação cancelada.');
-
             }
-
         }
 
         function importarDados(event) {
-
             const arquivo = event.target.files[0];
-
             if (!arquivo) return;
 
             const reader = new FileReader();
-
             reader.onload = function (e) {
-
                 try {
-
                     const texto = e.target.result;
-
                     const linhas = parseCSV(texto);
-
-                    linhas.shift();
-
+                    linhas.shift(); // Remove cabeçalho
                     const vendas = [];
 
                     linhas.forEach(colunas => {
-
                         if (colunas.length < 7) return;
-
                         vendas.push({
-
                             id: gerarIdUnico(),
-
                             cliente: colunas[0],
-
                             data: colunas[1],
-
                             item: colunas[2],
-
                             valor: colunas[3],
-
                             parcelamento: colunas[4],
-
-                            pago:
-                                colunas[5].trim() === 'Pago',
-
+                            pago: colunas[5].trim() === 'Pago',
                             obs1: colunas[6]
-
                         });
-
                     });
 
                     if (vendas.length === 0) {
-
                         alert('CSV inválido.');
-
                         return;
-
                     }
 
-                    if (
-                        confirm(
-                            'Isso substituirá os dados atuais. Deseja continuar?'
-                        )
-                    ) {
-
-                        localStorage.setItem(
-                            'vendas',
-                            JSON.stringify(vendas)
-                        );
-
+                    if (confirm('Isso substituirá os dados atuais. Deseja continuar?')) {
+                        localStorage.setItem('vendas', JSON.stringify(vendas));
                         exibirVendas();
-
                         alert('CSV importado com sucesso!');
-
                     }
-
                 } catch (erro) {
-
                     console.log(erro);
-
                     alert('Erro ao importar CSV.');
-
                 }
-
             };
-
             reader.readAsText(arquivo);
-
             event.target.value = '';
-
         }
 
         function parseCSV(texto) {
-
             const linhas = [];
-
             let linha = [];
-
             let valor = '';
-
             let dentroAspas = false;
 
             for (let i = 0; i < texto.length; i++) {
-
                 const caractere = texto[i];
-
                 const proximo = texto[i + 1];
 
                 if (caractere === '"') {
-
                     if (dentroAspas && proximo === '"') {
-
                         valor += '"';
-
                         i++;
-
                     } else {
-
                         dentroAspas = !dentroAspas;
-
                     }
-
-                } else if (
-                    caractere === ',' &&
-                    !dentroAspas
-                ) {
-
+                } else if (caractere === ',' && !dentroAspas) {
                     linha.push(valor);
-
                     valor = '';
-
-                } else if (
-                    (caractere === '\n' || caractere === '\r') &&
-                    !dentroAspas
-                ) {
-
+                } else if ((caractere === '\n' || caractere === '\r') && !dentroAspas) {
                     if (valor || linha.length > 0) {
-
                         linha.push(valor);
-
                         linhas.push(linha);
-
                         linha = [];
-
                         valor = '';
-
                     }
-
                 } else {
-
                     valor += caractere;
-
                 }
-
             }
-
             if (valor || linha.length > 0) {
-
                 linha.push(valor);
-
                 linhas.push(linha);
-
             }
-
             return linhas;
-
         }
 
         function formatarData(dataString) {
-
             if (!dataString) return '-';
-
-            const partes =
-                dataString.split('-');
-
+            const partes = dataString.split('-');
             if (partes.length !== 3) return dataString;
-
-            return `
-                ${partes[2]}/
-                ${partes[1]}/
-                ${partes[0]}
-            `.replace(/\s/g, '');
-
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
         }
-
     </script>
 
 </body>
