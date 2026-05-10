@@ -74,11 +74,18 @@
             min-height: 70px;
         }
 
+        .checkbox-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
         .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding-top: 10px;
+            gap: 8px;
+            white-space: nowrap;
         }
 
         .actions-bar {
@@ -129,7 +136,6 @@
 
         .table-container {
             overflow-x: auto;
-
         }
 
         table {
@@ -148,10 +154,6 @@
 
         th {
             background: var(--light);
-            text-align: center;
-            border-color: #d1d1d1;
-            border-left-style: solid;
-            border-right-style: solid;
         }
 
         .status-pago {
@@ -164,13 +166,23 @@
             font-weight: bold;
         }
 
+        .acerto-pago {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .acerto-pendente {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
         .acoes {
             display: flex;
             gap: 5px;
         }
 
         .obs-texto {
-            max-width: 130px;
+            max-width: 160px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -189,32 +201,17 @@
             padding: 20px;
         }
 
-        /* Estilo para a barra de busca */
         .search-container {
             margin-bottom: 20px;
         }
 
         #busca-cliente {
             border: 2px solid var(--light);
-            background-color: #fff;
-        }
-
-        #busca-cliente:focus {
-            border-color: var(--primary);
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            table {
-                min-width: 700px;
-            }
+            body { padding: 10px; }
+            .container { padding: 15px; }
         }
     </style>
 </head>
@@ -222,57 +219,51 @@
 <body>
 
     <div class="container">
-
         <h2>Sistema de Vendas</h2>
 
         <form id="venda-form">
-
             <div class="grid-form">
-
                 <input type="text" id="cliente" placeholder="Cliente" required>
-
                 <input type="date" id="data" required>
-
                 <textarea id="item" placeholder="Item comprado" required></textarea>
-
                 <input type="number" id="valor" placeholder="Valor" step="0.01" min="0" required>
-
+                
                 <select id="parcelamento">
                     <option value="À vista">À vista</option>
                     <option value="1x">1x</option>
                     <option value="2x">2x</option>
                     <option value="3x">3x</option>
                     <option value="4x">4x</option>
+                    <option value="5x">5x</option>
+                    <option value="6x">6x</option>
+                    <option value="7x">7x</option>
+                    <option value="8x">8x</option>
+                    <option value="9x">9x</option>
+                    <option value="10x">10x</option>
+                    <option value="11x">11x</option>
+                    <option value="12x">12x</option>
                 </select>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="pago" style="width:auto;">
-                    <label for="pago">Já está pago?</label>
+                <div class="checkbox-row">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="pago" style="width:auto;">
+                        <label for="pago">Já está pago?</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="acerto" style="width:auto;">
+                        <label for="acerto">Acerto</label>
+                    </div>
                 </div>
 
                 <textarea id="obs1" class="full-width" placeholder="Observação"></textarea>
-
             </div>
 
             <div class="actions-bar">
-
-                <button type="submit" class="btn-save" id="btnSalvar">
-                    Salvar Venda
-                </button>
-
-                <button type="button" class="btn-export" onclick="exportarDados()">
-                    Exportar
-                </button>
-
-                <input type="file" id="importar-file" style="display:none" accept=".csv"
-                    onchange="importarDados(event)">
-
-                <button type="button" class="btn-import" onclick="document.getElementById('importar-file').click()">
-                    Importar
-                </button>
-
+                <button type="submit" class="btn-save" id="btnSalvar">Salvar Venda</button>
+                <button type="button" class="btn-export" onclick="exportarDados()">Exportar CSV</button>
+                <input type="file" id="importar-file" style="display:none" accept=".csv" onchange="importarDados(event)">
+                <button type="button" class="btn-import" onclick="document.getElementById('importar-file').click()">Importar CSV</button>
             </div>
-
         </form>
 
         <h3>Vendas Registradas</h3>
@@ -282,9 +273,7 @@
         </div>
 
         <div class="table-container">
-
             <table id="vendas-table">
-
                 <thead>
                     <tr>
                         <th>Cliente</th>
@@ -294,16 +283,13 @@
                         <th>Parcelamento</th>
                         <th>Status</th>
                         <th>Observação</th>
+                        <th>Acerto</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
-
                 <tbody></tbody>
-
             </table>
-
         </div>
-
     </div>
 
     <script>
@@ -317,25 +303,17 @@
             restaurarFormulario();
         });
 
-        const camposFormulario = [
-            'cliente',
-            'data',
-            'item',
-            'valor',
-            'parcelamento',
-            'pago',
-            'obs1'
-        ];
+        const camposFormulario = ['cliente', 'data', 'item', 'valor', 'parcelamento', 'pago', 'acerto', 'obs1'];
 
         camposFormulario.forEach(id => {
             const campo = document.getElementById(id);
-            campo.addEventListener('input', salvarRascunho);
-            campo.addEventListener('change', salvarRascunho);
+            if(campo) {
+                campo.addEventListener('input', salvarRascunho);
+                campo.addEventListener('change', salvarRascunho);
+            }
         });
 
-        function gerarIdUnico() {
-            return crypto.randomUUID();
-        }
+        function gerarIdUnico() { return crypto.randomUUID(); }
 
         function salvarRascunho() {
             const rascunho = obterDadosFormulario();
@@ -356,6 +334,7 @@
                 valor: document.getElementById('valor').value,
                 parcelamento: document.getElementById('parcelamento').value,
                 pago: document.getElementById('pago').checked,
+                acerto: document.getElementById('acerto').checked,
                 obs1: document.getElementById('obs1').value.trim()
             };
         }
@@ -367,16 +346,13 @@
             document.getElementById('valor').value = venda.valor || '';
             document.getElementById('parcelamento').value = venda.parcelamento || 'À vista';
             document.getElementById('pago').checked = venda.pago || false;
+            document.getElementById('acerto').checked = venda.acerto || false;
             document.getElementById('obs1').value = venda.obs1 || '';
         }
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            const venda = {
-                id: editandoId || gerarIdUnico(),
-                ...obterDadosFormulario()
-            };
-
+            const venda = { id: editandoId || gerarIdUnico(), ...obterDadosFormulario() };
             let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
 
             if (editandoId) {
@@ -397,18 +373,14 @@
         function exibirVendas() {
             const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
             const termoBusca = document.getElementById('busca-cliente').value.toLowerCase();
-
             tableBody.innerHTML = '';
 
-            // Lógica de filtragem por cliente
-            const vendasFiltradas = vendas.filter(venda =>
-                venda.cliente.toLowerCase().includes(termoBusca)
-            );
+            const vendasFiltradas = vendas.filter(venda => venda.cliente.toLowerCase().includes(termoBusca));
 
             if (vendasFiltradas.length === 0) {
                 const tr = document.createElement('tr');
                 const td = document.createElement('td');
-                td.colSpan = 8;
+                td.colSpan = 9;
                 td.className = 'vazio';
                 td.textContent = termoBusca ? 'Nenhum cliente encontrado.' : 'Nenhuma venda registrada.';
                 tr.appendChild(td);
@@ -420,7 +392,6 @@
 
             vendasFiltradas.forEach(venda => {
                 const tr = document.createElement('tr');
-
                 tr.appendChild(criarTd(venda.cliente));
                 tr.appendChild(criarTd(formatarData(venda.data)));
                 tr.appendChild(criarObservacaoTd(venda.item));
@@ -433,6 +404,11 @@
                 tr.appendChild(statusTd);
 
                 tr.appendChild(criarObservacaoTd(venda.obs1));
+
+                const acertoTd = document.createElement('td');
+                acertoTd.className = venda.acerto ? 'acerto-pago' : 'acerto-pendente';
+                acertoTd.textContent = venda.acerto ? 'Pago' : 'Pendente';
+                tr.appendChild(acertoTd);
 
                 const acoesTd = document.createElement('td');
                 const acoesDiv = document.createElement('div');
@@ -474,10 +450,7 @@
         }
 
         function mostrarObservacao(texto) {
-            if (!texto || texto.trim() === '') {
-                alert('Nenhuma observação.');
-                return;
-            }
+            if (!texto || texto.trim() === '') return alert('Nenhuma observação.');
             alert(texto);
         }
 
@@ -485,7 +458,6 @@
             const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
             const venda = vendas.find(v => v.id === id);
             if (!venda) return;
-
             preencherFormulario(venda);
             editandoId = id;
             btnSalvar.innerHTML = 'Atualizar Venda';
@@ -505,98 +477,60 @@
             return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
+        // Função ajustada para o formato dia/mes/ano(curto)
+        function formatarData(dataString) {
+            if (!dataString) return '-';
+            const partes = dataString.split('-'); // [ano, mes, dia]
+            const anoCurto = partes[0].slice(-2);
+            return `${partes[2]}/${partes[1]}/${anoCurto}`;
+        }
+
         async function exportarDados() {
-            try {
-                const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
-                if (vendas.length === 0) {
-                    alert('Não há dados para exportar.');
-                    return;
-                }
-
-                let csv = 'Cliente,Data,Item,Valor,Parcelamento,Status,Observacao\n';
-                vendas.forEach(venda => {
-                    const linha = [
-                        venda.cliente,
-                        venda.data,
-                        venda.item,
-                        venda.valor,
-                        venda.parcelamento,
-                        venda.pago ? 'Pago' : 'Pendente',
-                        venda.obs1 || ''
-                    ].map(valor => `"${String(valor).replace(/"/g, '""')}"`).join(',');
-                    csv += linha + '\n';
-                });
-
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-
-                if ('showSaveFilePicker' in window) {
-                    const fileHandle = await window.showSaveFilePicker({
-                        suggestedName: 'vendas.csv',
-                        types: [{ description: 'Arquivo CSV', accept: { 'text/csv': ['.csv'] } }]
-                    });
-                    const writable = await fileHandle.createWritable();
-                    await writable.write(blob);
-                    await writable.close();
-                    alert('CSV exportado com sucesso!');
-                    return;
-                }
-
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'vendas.csv';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                alert('CSV exportado com sucesso!');
-            } catch (err) {
-                console.log(err);
-                alert('Exportação cancelada.');
-            }
+            const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+            if (vendas.length === 0) return alert('Sem dados.');
+            let csv = 'Cliente,Data,Item,Valor,Parcelamento,Status,Observacao,Acerto\n';
+            vendas.forEach(v => {
+                csv += `"${v.cliente}","${v.data}","${v.item}","${v.valor}","${v.parcelamento}","${v.pago ? 'Pago' : 'Pendente'}","${v.obs1 || ''}","${v.acerto ? 'Sim' : 'Não'}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'vendas.csv';
+            link.click();
         }
 
         function importarDados(event) {
             const arquivo = event.target.files[0];
             if (!arquivo) return;
-
             const reader = new FileReader();
             reader.onload = function (e) {
                 try {
                     const texto = e.target.result;
                     const linhas = parseCSV(texto);
-                    linhas.shift(); // Remove cabeçalho
-                    const vendas = [];
-
+                    linhas.shift();
+                    const novasVendas = [];
                     linhas.forEach(colunas => {
-                        if (colunas.length < 7) return;
-                        vendas.push({
-                            id: gerarIdUnico(),
-                            cliente: colunas[0],
-                            data: colunas[1],
-                            item: colunas[2],
-                            valor: colunas[3],
-                            parcelamento: colunas[4],
-                            pago: colunas[5].trim() === 'Pago',
-                            obs1: colunas[6]
+                        if (colunas.length < 8) return;
+                        novasVendas.push({
+                            id: crypto.randomUUID(),
+                            cliente: colunas[0].replace(/"/g, ''),
+                            data: colunas[1].replace(/"/g, ''),
+                            item: colunas[2].replace(/"/g, ''),
+                            valor: colunas[3].replace(/"/g, ''),
+                            parcelamento: colunas[4].replace(/"/g, ''),
+                            pago: colunas[5].replace(/"/g, '') === 'Pago',
+                            obs1: colunas[6].replace(/"/g, ''),
+                            acerto: colunas[7].replace(/"/g, '') === 'Sim'
                         });
                     });
-
-                    if (vendas.length === 0) {
-                        alert('CSV inválido.');
-                        return;
-                    }
-
-                    if (confirm('Isso substituirá os dados atuais. Deseja continuar?')) {
-                        localStorage.setItem('vendas', JSON.stringify(vendas));
+                    if (confirm('Deseja substituir os dados atuais?')) {
+                        localStorage.setItem('vendas', JSON.stringify(novasVendas));
                         exibirVendas();
-                        alert('CSV importado com sucesso!');
+                        alert('Importado com sucesso!');
                     }
-                } catch (erro) {
-                    console.log(erro);
-                    alert('Erro ao importar CSV.');
-                }
+                } catch (erro) { alert('Erro ao importar o arquivo.'); }
             };
             reader.readAsText(arquivo);
-            event.target.value = '';
         }
 
         function parseCSV(texto) {
@@ -604,47 +538,19 @@
             let linha = [];
             let valor = '';
             let dentroAspas = false;
-
             for (let i = 0; i < texto.length; i++) {
                 const caractere = texto[i];
-                const proximo = texto[i + 1];
-
                 if (caractere === '"') {
-                    if (dentroAspas && proximo === '"') {
-                        valor += '"';
-                        i++;
-                    } else {
-                        dentroAspas = !dentroAspas;
-                    }
+                    if (dentroAspas && texto[i + 1] === '"') { valor += '"'; i++; } else dentroAspas = !dentroAspas;
                 } else if (caractere === ',' && !dentroAspas) {
-                    linha.push(valor);
-                    valor = '';
+                    linha.push(valor); valor = '';
                 } else if ((caractere === '\n' || caractere === '\r') && !dentroAspas) {
-                    if (valor || linha.length > 0) {
-                        linha.push(valor);
-                        linhas.push(linha);
-                        linha = [];
-                        valor = '';
-                    }
-                } else {
-                    valor += caractere;
-                }
+                    if (valor || linha.length > 0) { linha.push(valor); linhas.push(linha); linha = []; valor = ''; }
+                } else valor += caractere;
             }
-            if (valor || linha.length > 0) {
-                linha.push(valor);
-                linhas.push(linha);
-            }
+            if (valor || linha.length > 0) { linha.push(valor); linhas.push(linha); }
             return linhas;
         }
-
-        function formatarData(dataString) {
-            if (!dataString) return '-';
-            const partes = dataString.split('-');
-            if (partes.length !== 3) return dataString;
-            return `${partes[2]}/${partes[1]}/${partes[0]}`;
-        }
     </script>
-
 </body>
-
 </html>
