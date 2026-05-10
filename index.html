@@ -21,9 +21,42 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f0f2f5;
+            background: #b0e98a;
             padding: 20px;
             color: var(--primary);
+        }
+
+        .header-logo-group {
+            position: absolute;
+            top: 20px;
+            left: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            gap: 10px;
+        }
+
+        .logo-redonda {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.788);
+            background-color: #fff;
+        }
+
+        .logo-titulo{
+            width: 250px;
+            font-size: 30px;
+            font-family:cursive;
+            background-color: #ffffff;
+            color: black;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(34, 34, 34, 0.788);
         }
 
         .container {
@@ -166,7 +199,7 @@
             font-weight: bold;
         }
 
-        .acerto-pago {
+        .acerto-acertado {
             color: var(--secondary);
             font-weight: bold;
         }
@@ -218,6 +251,11 @@
 
 <body>
 
+    <div class="header-logo-group">
+        <img src="logo.jpeg" alt="Logo" class="logo-redonda">
+        <span class="logo-titulo">Toda Chic Modas</span>
+    </div>
+
     <div class="container">
         <h2>Sistema de Vendas</h2>
 
@@ -230,18 +268,9 @@
                 
                 <select id="parcelamento">
                     <option value="À vista">À vista</option>
-                    <option value="1x">1x</option>
                     <option value="2x">2x</option>
                     <option value="3x">3x</option>
                     <option value="4x">4x</option>
-                    <option value="5x">5x</option>
-                    <option value="6x">6x</option>
-                    <option value="7x">7x</option>
-                    <option value="8x">8x</option>
-                    <option value="9x">9x</option>
-                    <option value="10x">10x</option>
-                    <option value="11x">11x</option>
-                    <option value="12x">12x</option>
                 </select>
 
                 <div class="checkbox-row">
@@ -260,9 +289,9 @@
 
             <div class="actions-bar">
                 <button type="submit" class="btn-save" id="btnSalvar">Salvar Venda</button>
-                <button type="button" class="btn-export" onclick="exportarDados()">Exportar CSV</button>
+                <button type="button" class="btn-export" onclick="exportarDados()">Exportar</button>
                 <input type="file" id="importar-file" style="display:none" accept=".csv" onchange="importarDados(event)">
-                <button type="button" class="btn-import" onclick="document.getElementById('importar-file').click()">Importar CSV</button>
+                <button type="button" class="btn-import" onclick="document.getElementById('importar-file').click()">Importar</button>
             </div>
         </form>
 
@@ -406,8 +435,8 @@
                 tr.appendChild(criarObservacaoTd(venda.obs1));
 
                 const acertoTd = document.createElement('td');
-                acertoTd.className = venda.acerto ? 'acerto-pago' : 'acerto-pendente';
-                acertoTd.textContent = venda.acerto ? 'Pago' : 'Pendente';
+                acertoTd.className = venda.acerto ? 'acerto-acertado' : 'acerto-pendente';
+                acertoTd.textContent = venda.acerto ? 'Acertado' : 'Pendente';
                 tr.appendChild(acertoTd);
 
                 const acoesTd = document.createElement('td');
@@ -477,10 +506,9 @@
             return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
-        // Função ajustada para o formato dia/mes/ano(curto)
         function formatarData(dataString) {
             if (!dataString) return '-';
-            const partes = dataString.split('-'); // [ano, mes, dia]
+            const partes = dataString.split('-'); 
             const anoCurto = partes[0].slice(-2);
             return `${partes[2]}/${partes[1]}/${anoCurto}`;
         }
