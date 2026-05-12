@@ -747,7 +747,7 @@
 
         // Lógica da Calculadora com Histórico
         const display = document.getElementById('display');
-        let historicoContas = [];
+        let historicoContas = JSON.parse(localStorage.getItem('historicoCalculadora') || '[]');
 
         function appendToDisplay(input) {
             if (display.value === "0" && input !== '.') {
@@ -783,6 +783,7 @@
                 // Salva no histórico
                 historicoContas.unshift(`${expressaoOriginal} = ${resultado}`);
                 if (historicoContas.length > 15) historicoContas.pop(); // Limita a 15 itens
+                localStorage.setItem('historicoCalculadora', JSON.stringify(historicoContas));
 
             } catch (error) {
                 display.value = "Erro";
