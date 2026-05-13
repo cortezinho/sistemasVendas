@@ -414,7 +414,7 @@
         <form id="venda-form">
             <div class="grid-form">
                 <input type="text" id="cliente" placeholder="Cliente" required>
-                <input type="date" id="data" required>
+                <input type="date" id="data">
                 <textarea id="item" placeholder="Item comprado" required></textarea>
                 <input type="number" id="valor" placeholder="Valor" step="0.01" min="0" required>
 
@@ -512,9 +512,20 @@
         });
 
         function obterDadosFormulario() {
+            let dataValor = document.getElementById('data').value;
+            
+            // Lógica para pegar a data do computador se estiver vazio
+            if (!dataValor) {
+                const hoje = new Date();
+                const dia = String(hoje.getDate()).padStart(2, '0');
+                const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+                const ano = hoje.getFullYear();
+                dataValor = `${ano}-${mes}-${dia}`;
+            }
+
             return {
                 cliente: document.getElementById('cliente').value.trim(),
-                data: document.getElementById('data').value,
+                data: dataValor,
                 item: document.getElementById('item').value.trim(),
                 valor: document.getElementById('valor').value,
                 parcelamento: document.getElementById('parcelamento').value,
@@ -612,7 +623,7 @@
         }
 
         function removerVenda(id) {
-            if (confirm('Excluir este registro?')) {
+            if (confirm('Tem certeza que deseja excluir este registro?')) {
                 let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
                 localStorage.setItem('vendas', JSON.stringify(vendas.filter(v => v.id !== id)));
                 exibirVendas();
@@ -626,10 +637,9 @@
             return `${dia}/${mes}/${ano.slice(-2)}`;
         }
 
-        // NOVO SISTEMA DE EXPORTAÇÃO JSON
         function exportarDados() {
             const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
-            if (vendas.length === 0) return alert('Sem dados.');
+            if (vendas.length === 0) return alert('Sem dados para exportar.');
             const blob = new Blob([JSON.stringify(vendas, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -637,7 +647,6 @@
             link.click();
         }
 
-        // NOVO SISTEMA DE IMPORTAÇÃO JSON
         function importarDados(event) {
             const arquivo = event.target.files[0];
             if (!arquivo) return;
@@ -645,17 +654,17 @@
             reader.onload = function (e) {
                 try {
                     const dados = JSON.parse(e.target.result);
-                    if (confirm('Substituir dados atuais?')) {
+                    if (confirm('Deseja substituir os dados atuais por este arquivo JSON?')) {
                         localStorage.setItem('vendas', JSON.stringify(dados));
                         exibirVendas();
-                        alert('Importado com sucesso!');
+                        alert('Dados importados com sucesso!');
                     }
-                } catch (err) { alert('Erro no arquivo JSON.'); }
+                } catch (err) { alert('Erro ao processar o arquivo JSON.'); }
             };
             reader.readAsText(arquivo);
         }
 
-        // Calculadora
+        // Lógica da Calculadora
         const display = document.getElementById('display');
         let historicoContas = JSON.parse(localStorage.getItem('historicoCalculadora') || '[]');
 

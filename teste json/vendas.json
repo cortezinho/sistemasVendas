@@ -20,5 +20,27 @@
     "pago": true,
     "acerto": true,
     "obs1": "32423"
+  },
+  {
+    "id": "b85ee9e8-62eb-48e9-a917-0f35f8130a81",
+    "cliente": "gabruel",
+    "data": "2026-05-12",
+    "item": "calça",
+    "valor": "100",
+    "parcelamento": "2x",
+    "pago": true,
+    "acerto": true,
+    "obs1": "teste"
+  },
+  {
+    "id": "47ffbeab-3582-4b60-a829-4578834e8f71",
+    "cliente": "vivian",
+    "data": "2026-05-12",
+    "item": "blusa",
+    "valor": "100",
+    "parcelamento": "2x",
+    "pago": true,
+    "acerto": true,
+    "obs1": "teste"
   }
 ]
