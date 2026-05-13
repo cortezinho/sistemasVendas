@@ -1,0 +1,24 @@
+[
+  {
+    "id": "6f70975e-e253-40f9-a3ad-20d9075d62d5",
+    "cliente": "dasd",
+    "data": "2423-03-04",
+    "item": "32423",
+    "valor": "32423",
+    "parcelamento": "4x",
+    "pago": true,
+    "acerto": true,
+    "obs1": "32423"
+  },
+  {
+    "id": "6f70975e-e253-40f9-a3ad-20d9075d62d6",
+    "cliente": "dasd",
+    "data": "2423-03-04",
+    "item": "32423",
+    "valor": "32423",
+    "parcelamento": "4x",
+    "pago": true,
+    "acerto": true,
+    "obs1": "32423"
+  }
+]
