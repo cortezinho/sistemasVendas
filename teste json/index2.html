@@ -13,29 +13,32 @@
             --danger: #e74c3c;
             --warning: #f39c12;
             --light: #ecf0f1;
+            --bg-body: #b0e98a;
         }
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #b0e98a;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-body);
             color: var(--primary);
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            padding: 20px;
+            min-height: 100vh;
         }
 
-        /* Grupo da Logo e Calculadora alinhados à esquerda */
-        .sidebar-left {
-            position: absolute;
-            top: 30px;
-            left: 50px;
+        /* BARRA LATERAL */
+        .sidebar {
             display: flex;
             flex-direction: column;
-            align-items: center;
             gap: 20px;
-            z-index: 10;
+            align-items: center;
         }
 
         .header-logo-group {
@@ -43,53 +46,131 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
+            width: 100%;
         }
 
         .logo-redonda {
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             object-fit: cover;
             border: 5px solid white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.788);
-            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background: #fff;
         }
 
         .logo-titulo {
-            width: 250px;
-            font-size: 30px;
-            font-family: cursive;
-            background-color: #ffffff;
-            color: black;
+            width: 100%;
+            font-size: 24px;
+            font-family: 'Cursive', sans-serif;
+            background: white;
+            padding: 10px;
             text-align: center;
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0 4px 10px rgba(34, 34, 34, 0.788);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Estilos da Calculadora (Posicionamento alterado) */
+        /* CALCULADORA */
         .calculator {
-            background-color: #2c3e50;
+            background: var(--primary);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
+            width: 100%;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            width: 300px;
         }
 
-        .container {
-            max-width: 1460px;
-            margin-left: 380px;
-            /* Espaço para a sidebar fixa à esquerda */
+        .calc-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .calc-display {
+            flex-grow: 1;
+            height: 45px;
+            background: #fff;
+            text-align: right;
+            padding: 10px;
+            font-size: 22px;
+            border: none;
+            border-radius: 6px;
+            color: #333;
+        }
+
+        .btn-toggle-hist {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .calc-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-op {
+            background: var(--warning);
+        }
+
+        .btn-equal {
+            background: var(--secondary);
+            grid-column: span 2;
+        }
+
+        .btn-clear {
+            background: var(--danger);
+            grid-column: span 2;
+        }
+
+        #historico-view {
+            background: #34495e;
+            padding: 10px;
+            height: 180px;
+            display: none;
+            flex-direction: column;
+            color: white;
+            border-radius: 6px;
+        }
+
+        #lista-historico {
+            list-style: none;
+            overflow-y: auto;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
             background: white;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         h2,
         h3 {
+            margin-bottom: 20px;
             border-bottom: 2px solid var(--light);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .grid-form {
@@ -107,51 +188,72 @@
         textarea,
         select {
             padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             width: 100%;
+            font-size: 14px;
         }
 
-        textarea {
+        input:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        /* AJUSTE NA ALTURA DAS OBSERVAÇÕES */
+        #obs1 {
+            min-height: 150px;
+            /* Aumentado conforme solicitado */
             resize: vertical;
-            min-height: 70px;
+        }
+
+        textarea#item {
+            min-height: 80px;
         }
 
         .checkbox-row {
             display: flex;
             gap: 20px;
             align-items: center;
-            flex-wrap: wrap;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
         }
 
         .checkbox-group {
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
         }
 
         .actions-bar {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 25px;
         }
 
         button {
-            padding: 12px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             color: white;
             font-weight: bold;
-            transition: 0.2s;
+            transition: 0.3s;
+            padding: 12px 20px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
         }
 
         .btn-save {
             background: var(--secondary);
-            flex-grow: 1;
+            flex-grow: 2;
+        }
+
+        .btn-clear-form {
+            background: #95a5a6;
         }
 
         .btn-export {
@@ -162,57 +264,60 @@
             background: #7f8c8d;
         }
 
-        .btn-edit {
-            background: var(--warning);
-            padding: 6px 10px;
-            font-size: 12px;
+        /* BARRA DE BUSCA */
+        .search-panel {
+            background: var(--primary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
 
-        .btn-delete {
-            background: var(--danger);
-            padding: 6px 10px;
-            font-size: 12px;
+        .search-panel input {
+            background: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
         }
 
         .table-container {
             overflow-x: auto;
+            margin-top: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px;
+            min-width: 900px;
         }
 
         th,
         td {
-            padding: 12px;
+            padding: 15px;
             border-bottom: 1px solid #eee;
             text-align: left;
         }
 
         th {
             background: var(--light);
+            position: sticky;
+            top: 0;
         }
 
-        .status-pago {
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .bg-pago {
+            background: #d4edda;
             color: var(--secondary);
-            font-weight: bold;
         }
 
-        .status-pendente {
+        .bg-pendente {
+            background: #f8d7da;
             color: var(--danger);
-            font-weight: bold;
-        }
-
-        .acerto-acertado {
-            color: var(--secondary);
-            font-weight: bold;
-        }
-
-        .acerto-pendente {
-            color: var(--danger);
-            font-weight: bold;
         }
 
         .obs-texto {
@@ -222,95 +327,41 @@
             text-overflow: ellipsis;
             cursor: pointer;
             color: #2980b9;
-            font-weight: bold;
         }
 
-        .vazio {
-            text-align: center;
-            color: #777;
-            padding: 20px;
+        /* MODAL */
+        #customModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Calculadora interna */
-        .calc-header {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
         }
 
-        .calc-display {
-            flex-grow: 1;
-            height: 40px;
-            background: #fff;
-            text-align: right;
-            padding: 10px;
-            font-size: 20px;
-            border-radius: 5px;
-            color: #333;
-        }
-
-        .btn-toggle-hist {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            color: white;
-        }
-
-        .calc-buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-        }
-
-        .calc-btn {
-            padding: 10px;
-            font-size: 18px;
-            border-radius: 5px;
-            background: #34495e;
-            color: white;
-        }
-
-        .btn-op {
-            background: #f39c12;
-        }
-
-        .btn-equal {
-            background: #27ae60;
-            grid-column: span 2;
-        }
-
-        .btn-clear {
-            background: #e74c3c;
-            grid-column: span 2;
-        }
-
-        #historico-view {
-            background: #34495e;
-            padding: 10px;
-            height: 180px;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            border-radius: 5px;
-        }
-
-        #lista-historico {
-            list-style: none;
-            padding: 0;
-            overflow-y: auto;
-            font-size: 14px;
-        }
-
-        @media (max-width: 1100px) {
-            .sidebar-left {
-                position: static;
-                width: 100%;
-                margin-bottom: 20px;
+        @media (max-width: 900px) {
+            body {
+                grid-template-columns: 1fr;
             }
 
-            .container {
-                margin-left: auto;
+            .sidebar {
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
             }
         }
     </style>
@@ -318,16 +369,16 @@
 
 <body>
 
-    <div class="sidebar-left">
+    <aside class="sidebar">
         <div class="header-logo-group">
-            <img src="../logo.jpeg" alt="Logo" class="logo-redonda">
+            <img src="logo.jpeg" alt="Logo" class="logo-redonda">
             <span class="logo-titulo">Toda Chic Modas</span>
         </div>
 
         <div class="calculator">
             <div class="calc-header">
                 <input type="text" id="display" class="calc-display" disabled value="0">
-                <button class="btn-toggle-hist" onclick="toggleHistorico()">🕒</button>
+                <button class="btn-toggle-hist" onclick="toggleHistorico()" title="Histórico">🕒</button>
             </div>
             <div id="calc-main-ui">
                 <div class="calc-buttons">
@@ -351,82 +402,90 @@
                     <button class="calc-btn btn-equal" onclick="calculate()">=</button>
                 </div>
             </div>
-            <div id="historico-view" style="display: none;">
-                <div style="font-weight: bold; margin-bottom: 5px;">Histórico</div>
+            <div id="historico-view">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: bold;">Histórico</span>
+                    <button onclick="limparHistorico()"
+                        style="background: none; font-size: 12px; color: #bdc3c7;">Limpar</button>
+                </div>
                 <ul id="lista-historico"></ul>
             </div>
         </div>
-    </div>
+    </aside>
 
-    <div class="container">
-        <h2>Cadastro de Vendas</h2>
-        <form id="venda-form">
-            <div class="grid-form">
-                <input type="text" id="cliente" placeholder="Cliente" required>
-                <input type="date" id="data">
-                <textarea id="item" placeholder="Item comprado" required></textarea>
-                <input type="number" id="valor" placeholder="Valor" step="0.01" required>
+    <main class="main-content">
+        <section class="card">
+            <h2>Novo Registro de Venda</h2>
+            <form id="venda-form">
+                <div class="grid-form">
+                    <input type="text" id="cliente" placeholder="Nome do Cliente" required>
+                    <input type="date" id="data" title="Data da venda (deixe vazio para hoje)">
+                    <textarea id="item" placeholder="Itens comprados" required></textarea>
+                    <input type="number" id="valor" placeholder="Valor total (Ex: 100.50)" step="0.01" required>
 
-                <select id="parcelamento">
-                    <option value="À vista">À vista</option>
-                    <option value="2x">2x</option>
-                    <option value="3x">3x</option>
-                    <option value="4x">4x</option>
-                </select>
+                    <select id="parcelamento">
+                        <option value="À vista">À vista</option>
+                        <option value="2x">2x</option>
+                        <option value="3x">3x</option>
+                        <option value="4x">4x</option>
+                    </select>
 
-                <div class="checkbox-row">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="pago" style="width:auto;">
-                        <label for="pago">Pago?</label>
+                    <div class="checkbox-row">
+                        <label class="checkbox-group"><input type="checkbox" id="pago">Está pago?</label>
+                        <label class="checkbox-group"><input type="checkbox" id="acerto">Acerto realizado?</label>
                     </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="acerto" style="width:auto;">
-                        <label for="acerto">Acerto</label>
-                    </div>
+                    <textarea id="obs1" class="full-width"
+                        placeholder="Escreva as observações detalhadas aqui..."></textarea>
                 </div>
-                <textarea id="obs1" class="full-width" placeholder="Observação"></textarea>
+
+                <div class="actions-bar">
+                    <button type="button" class="btn-clear-form" onclick="limparTudo()">Limpar</button>
+
+                    <button type="submit" class="btn-save" id="btnSalvar">Salvar Venda</button>
+                    <button type="button" class="btn-export" onclick="exportarDados()">Exportar</button>
+                    <input type="file" id="importar-file" style="display:none" accept=".json"
+                        onchange="importarDados(event)">
+                    <button type="button" class="btn-import"
+                        onclick="document.getElementById('importar-file').click()">Importar</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card">
+            <h3>Vendas Registradas</h3>
+
+            <div class="search-panel">
+                <input type="text" id="busca-cliente" placeholder="🔍 Digite o nome do cliente para buscar..."
+                    oninput="exibirVendas()">
             </div>
 
-            <div class="actions-bar">
-                <button type="submit" class="btn-save" id="btnSalvar">Salvar Venda</button>
-                <button type="button" class="btn-export" onclick="exportarDados()">Exportar JSON</button>
-                <input type="file" id="importar-file" style="display:none" accept=".json"
-                    onchange="importarDados(event)">
-                <button type="button" class="btn-import"
-                    onclick="document.getElementById('importar-file').click()">Importar JSON</button>
+            <div class="table-container">
+                <table id="vendas-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Item</th>
+                            <th>Valor</th>
+                            <th>Parc.</th>
+                            <th>Status</th>
+                            <th>Obs.</th>
+                            <th>Acerto</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-        </form>
+        </section>
+    </main>
 
-        <h3>Vendas Registradas</h3>
-        <input type="text" id="busca-cliente" placeholder="Filtrar por cliente..." oninput="exibirVendas()"
-            style="margin-bottom: 20px;">
-
-        <div class="table-container">
-            <table id="vendas-table">
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Data</th>
-                        <th>Item</th>
-                        <th>Valor</th>
-                        <th>Parc.</th>
-                        <th>Status</th>
-                        <th>Obs.</th>
-                        <th>Acerto</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="customModal"
-        style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background: rgba(0,0,0,0.5); align-items:center; justify-content:center;">
-        <div style="background:white; padding:20px; border-radius:12px; max-width:500px; width:90%;">
+    <div id="customModal">
+        <div class="modal-content">
             <h3 id="modalTitle">Detalhes</h3>
-            <p id="modalText" style="white-space: pre-wrap; margin: 20px 0;"></p>
-            <button onclick="fecharModal()" style="background:var(--primary); width:100%;">Fechar</button>
+            <p id="modalText"></p>
+            <button onclick="fecharModal()"
+                style="background: var(--primary); width: 100%; margin-top: 20px;">Fechar</button>
         </div>
     </div>
 
@@ -436,17 +495,46 @@
         const btnSalvar = document.getElementById('btnSalvar');
         let editandoId = null;
 
-        document.addEventListener('DOMContentLoaded', () => { exibirVendas(); restaurarFormulario(); });
+        document.addEventListener('DOMContentLoaded', () => {
+            exibirVendas();
+            restaurarRascunho();
+        });
+
+        // PERSISTÊNCIA DE RASCUNHO
+        const campos = ['cliente', 'data', 'item', 'valor', 'parcelamento', 'pago', 'acerto', 'obs1'];
+        campos.forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('change', () => {
+                const dados = obterDadosFormulario();
+                localStorage.setItem('rascunho_venda', JSON.stringify(dados));
+            });
+        });
+
+        function restaurarRascunho() {
+            const rascunho = JSON.parse(localStorage.getItem('rascunho_venda'));
+            if (rascunho && !editandoId) preencherCampos(rascunho);
+        }
+
+        function preencherCampos(v) {
+            document.getElementById('cliente').value = v.cliente || '';
+            document.getElementById('data').value = v.data || '';
+            document.getElementById('item').value = v.item || '';
+            document.getElementById('valor').value = v.valor || '';
+            document.getElementById('parcelamento').value = v.parcelamento || 'À vista';
+            document.getElementById('pago').checked = !!v.pago;
+            document.getElementById('acerto').checked = !!v.acerto;
+            document.getElementById('obs1').value = v.obs1 || '';
+        }
 
         function obterDadosFormulario() {
-            let dataValor = document.getElementById('data').value;
-            if (!dataValor) {
-                const hoje = new Date();
-                dataValor = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+            let dataV = document.getElementById('data').value;
+            if (!dataV) {
+                const d = new Date();
+                dataV = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
             }
             return {
                 cliente: document.getElementById('cliente').value.trim(),
-                data: dataValor,
+                data: dataV,
                 item: document.getElementById('item').value.trim(),
                 valor: document.getElementById('valor').value,
                 parcelamento: document.getElementById('parcelamento').value,
@@ -458,93 +546,148 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            const venda = { id: editandoId || crypto.randomUUID(), ...obterDadosFormulario() };
+            const dados = obterDadosFormulario();
+            const venda = { id: editandoId || crypto.randomUUID(), ...dados };
+
             let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
-            vendas = editandoId ? vendas.map(v => v.id === editandoId ? venda : v) : [...vendas, venda];
+            if (editandoId) {
+                vendas = vendas.map(v => v.id === editandoId ? venda : v);
+                editandoId = null;
+                btnSalvar.innerHTML = "Salvar Venda";
+                btnSalvar.style.background = "var(--secondary)";
+            } else {
+                vendas.push(venda);
+            }
+
             localStorage.setItem('vendas', JSON.stringify(vendas));
-            editandoId = null; btnSalvar.innerHTML = 'Salvar Venda';
-            form.reset(); exibirVendas();
+            limparTudo();
+            exibirVendas();
         });
 
         function exibirVendas() {
             const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
             const busca = document.getElementById('busca-cliente').value.toLowerCase();
             tableBody.innerHTML = '';
-            vendas.filter(v => v.cliente.toLowerCase().includes(busca))
-                .sort((a, b) => new Date(b.data) - new Date(a.data))
-                .forEach(v => {
+
+            const filtradas = vendas.filter(v => v.cliente.toLowerCase().includes(busca))
+                .sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            if (filtradas.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="9" class="vazio">Nenhum registro encontrado.</td></tr>';
+            } else {
+                filtradas.forEach(v => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${v.cliente}</td>
+                        <td><strong>${v.cliente}</strong></td>
                         <td>${v.data.split('-').reverse().join('/')}</td>
-                        <td><div class="obs-texto" onclick="mostrarModal(\`${v.item}\`, 'Item')">${v.item}</div></td>
-                        <td>R$ ${Number(v.valor).toFixed(2)}</td>
+                        <td><div class="obs-texto" onclick="mostrarModal(\`${v.item}\`,'Itens Comprados')">${v.item}</div></td>
+                        <td>R$ ${parseFloat(v.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                         <td>${v.parcelamento}</td>
-                        <td class="${v.pago ? 'status-pago' : 'status-pendente'}">${v.pago ? 'Pago' : 'Pendente'}</td>
-                        <td><div class="obs-texto" onclick="mostrarModal(\`${v.obs1}\`, 'Obs')">${v.obs1 || '-'}</div></td>
-                        <td class="${v.acerto ? 'acerto-acertado' : 'acerto-pendente'}">${v.acerto ? 'Sim' : 'Não'}</td>
+                        <td><span class="status-badge ${v.pago ? 'bg-pago' : 'bg-pendente'}">${v.pago ? 'Pago' : 'Pendente'}</span></td>
+                        <td><div class="obs-texto" onclick="mostrarModal(\`${v.obs1}\`,'Observação')">${v.obs1 || '-'}</div></td>
+                        <td><span style="color:${v.acerto ? 'var(--secondary)' : 'var(--danger)'}">${v.acerto ? 'Sim' : 'Não'}</span></td>
                         <td>
-                            <button class="btn-edit" onclick="editarVenda('${v.id}')">Editar</button>
-                            <button class="btn-delete" onclick="removerVenda('${v.id}')">Exluir</button>
+                            <button onclick="editarVenda('${v.id}')" style="background:var(--warning); padding:5px 10px; font-size:11px;">Editar</button>
+                            <button onclick="removerVenda('${v.id}')" style="background:var(--danger); padding:5px 10px; font-size:11px;">Excluir</button>
                         </td>
                     `;
                     tableBody.appendChild(tr);
                 });
+            }
         }
 
         function editarVenda(id) {
             const v = JSON.parse(localStorage.getItem('vendas')).find(v => v.id === id);
-            document.getElementById('cliente').value = v.cliente;
-            document.getElementById('data').value = v.data;
-            document.getElementById('item').value = v.item;
-            document.getElementById('valor').value = v.valor;
-            document.getElementById('parcelamento').value = v.parcelamento;
-            document.getElementById('pago').checked = v.pago;
-            document.getElementById('acerto').checked = v.acerto;
-            document.getElementById('obs1').value = v.obs1;
-            editandoId = id; btnSalvar.innerHTML = 'Atualizar';
+            preencherCampos(v);
+            editandoId = id;
+            btnSalvar.innerHTML = "Atualizar Registro";
+            btnSalvar.style.background = "var(--warning)";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function removerVenda(id) {
-            if (confirm('Excluir?')) {
+            if (confirm('Deseja excluir permanentemente este registro?')) {
                 const v = JSON.parse(localStorage.getItem('vendas')).filter(v => v.id !== id);
-                localStorage.setItem('vendas', JSON.stringify(v)); exibirVendas();
+                localStorage.setItem('vendas', JSON.stringify(v));
+                exibirVendas();
             }
         }
 
+        function limparTudo() {
+            form.reset();
+            localStorage.removeItem('rascunho_venda');
+            editandoId = null;
+            btnSalvar.innerHTML = "Salvar Venda";
+            btnSalvar.style.background = "var(--secondary)";
+        }
+
         function exportarDados() {
-            const blob = new Blob([localStorage.getItem('vendas')], { type: 'application/json' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'vendas.json'; a.click();
+            const dados = localStorage.getItem('vendas') || '[]';
+            const blob = new Blob([dados], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `vendas_todachic_${new Date().getTime()}.json`;
+            a.click();
         }
 
         function importarDados(e) {
+            if (!confirm('Isso substituirá todos os dados atuais. Continuar?')) return;
             const reader = new FileReader();
-            reader.onload = (ev) => { localStorage.setItem('vendas', ev.target.result); exibirVendas(); };
+            reader.onload = (ev) => {
+                try {
+                    const json = JSON.parse(ev.target.result);
+                    localStorage.setItem('vendas', JSON.stringify(json));
+                    exibirVendas();
+                    alert('Importação concluída!');
+                } catch (err) { alert('Erro no arquivo JSON.'); }
+            };
             reader.readAsText(e.target.files[0]);
         }
 
-        function mostrarModal(t, tit) { document.getElementById('modalTitle').innerText = tit; document.getElementById('modalText').innerText = t; document.getElementById('customModal').style.display = 'flex'; }
+        function mostrarModal(txt, tit) {
+            if (!txt || txt === 'undefined') return;
+            document.getElementById('modalTitle').innerText = tit;
+            document.getElementById('modalText').innerText = txt;
+            document.getElementById('customModal').style.display = 'flex';
+        }
         function fecharModal() { document.getElementById('customModal').style.display = 'none'; }
 
-        // Calculadora
+        // CALCULADORA
         const disp = document.getElementById('display');
-        let hist = JSON.parse(localStorage.getItem('histCalc') || '[]');
-        function appendToDisplay(i) { disp.value = disp.value === "0" ? i : disp.value + i; }
+        let historico = JSON.parse(localStorage.getItem('hist_calc') || '[]');
+
+        function appendToDisplay(val) {
+            if (disp.value === "0" && val !== ".") disp.value = val;
+            else disp.value += val;
+        }
         function clearDisplay() { disp.value = "0"; }
+
         function calculate() {
             try {
-                let r = eval(disp.value.replace('%', '/100'));
-                hist.unshift(`${disp.value} = ${r}`); hist = hist.slice(0, 10);
-                localStorage.setItem('histCalc', JSON.stringify(hist));
-                disp.value = r;
-            } catch (e) { disp.value = "Erro"; }
+                const expressao = disp.value.replace('%', '/100');
+                const resultado = new Function(`return ${expressao}`)();
+                historico.unshift(`${disp.value} = ${resultado}`);
+                historico = historico.slice(0, 15);
+                localStorage.setItem('hist_calc', JSON.stringify(historico));
+                disp.value = resultado;
+            } catch (e) { disp.value = "Erro"; setTimeout(clearDisplay, 1500); }
         }
+
         function toggleHistorico() {
-            const m = document.getElementById('calc-main-ui'), h = document.getElementById('historico-view');
-            if (h.style.display === 'none') {
-                m.style.display = 'none'; h.style.display = 'flex';
-                document.getElementById('lista-historico').innerHTML = hist.map(i => `<li>${i}</li>`).join('');
-            } else { m.style.display = 'block'; h.style.display = 'none'; }
+            const main = document.getElementById('calc-main-ui');
+            const view = document.getElementById('historico-view');
+            const lista = document.getElementById('lista-historico');
+
+            if (view.style.display === 'none' || view.style.display === '') {
+                main.style.display = 'none'; view.style.display = 'flex';
+                lista.innerHTML = historico.map(h => `<li>${h}</li>`).join('') || '<li>Vazio</li>';
+            } else {
+                main.style.display = 'grid'; view.style.display = 'none';
+            }
+        }
+        function limparHistorico() {
+            historico = []; localStorage.removeItem('hist_calc');
+            document.getElementById('lista-historico').innerHTML = '<li>Vazio</li>';
         }
     </script>
 </body>
