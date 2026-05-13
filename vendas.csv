@@ -1,10 +1,27 @@
 Cliente,Data,Item,Valor,Parcelamento,Status,Observacao,Acerto
-"Gabriel","2026-04-20","calça
+"Gabriel","2026-04-20","calça","100","2x","Pendente","PARCELAS:
+MAIO - 
+JUNHO -","Sim"
+"Gabriel","3123-12-23","calça
+cargo
+jeans
 calça
-calça","100","2x","Pendente","PARCELAS:
+cargo","231","4x","Pago","PARCELAS:
+MAIO - 
+JUNHO -","Sim"
+"joao","3123-12-23","calça
+cargo","12","3x","Pago","PARCELAS:
+MAIO - 
+JUNHO -","Sim"
+"carlos","3123-12-23","calça
+cargo","312","À vista","Pendente","PARCELAS:
 MAIO - 
 JUNHO -","Não"
-"Gabriel","3123-12-23","calça cargo jeans","23123","4x","Pago","123123","Sim"
-"joao","3123-12-23","23123","12312","À vista","Pendente","","Sim"
-"carlos","3123-12-23","12312","312","À vista","Pendente","","Não"
-"cleber","0312-12-23","231231","1231231","À vista","Pendente","","Não"
+"cleber","0312-12-23","calça
+cargo","123","À vista","Pendente","PARCELAS:
+MAIO - 
+JUNHO -","Não"
+"vivi","2026-05-10","calça falaer","350","3x","Pendente","parcelas:
+junho
+julho
+agosto","Não"
