@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Vendas</title>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #b0e98a;
+            padding: 20px;
+            color: var(--primary);
+        }
+
+        .header-logo-group {
+            position: absolute;
+            top: 30px;
+            left: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            gap: 10px;
+        }
+
+        .logo-redonda {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.788);
+            background-color: #fff;
+        }
+
+        .logo-titulo {
+            width: 250px;
+            font-size: 30px;
+            font-family: cursive;
+            background-color: #ffffff;
+            color: black;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(34, 34, 34, 0.788);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h2,
+        h3 {
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        input,
+        textarea,
+        select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--secondary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-save {
+            background: var(--secondary);
+            flex-grow: 1;
+        }
+
+        .btn-export {
+            background: var(--primary);
+        }
+
+        .btn-import {
+            background: #7f8c8d;
+        }
+
+        .btn-edit {
+            background: var(--warning);
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: var(--light);
+        }
+
+        .status-pago {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .status-pendente {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .acerto-acertado {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .acerto-pendente {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 5px;
+        }
+
+        .obs-texto {
+            max-width: 160px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            color: #2980b9;
+            font-weight: bold;
+        }
+
+        .obs-texto:hover {
+            text-decoration: underline;
+        }
+
+        .vazio {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        #busca-cliente {
+            border: 2px solid var(--light);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+
+
+        /* Estilos da Calculadora */
+        .calculator {
+            position: absolute;
+            top: 30px;
+            right: 20px;
+            background-color: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            /* height: 300px; */
+            z-index: 100;
+        }
+
+        .calc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .calc-display {
+            flex-grow: 1;
+            height: 40px;
+            background: #fff;
+            text-align: right;
+            padding: 10px;
+            font-size: 24px;
+            border-radius: 5px;
+            border: none;
+            color: #333;
+        }
+
+        .btn-toggle-hist {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+
+        /* Visão do Histórico */
+        #historico-view {
+            background-color: #34495e;
+            border-radius: 5px;
+            padding: 10px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .hist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #lista-historico {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            font-size: 18px;
+            flex-grow: 1;
+        }
+
+        #lista-historico li {
+            padding: 5px 0;
+            border-bottom: 1px solid #465d75;
+            word-break: break-all;
+        }
+
+        .calc-btn {
+            padding: 10px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #34495e;
+            color: white;
+            transition: background 0.2s;
+        }
+
+        .calc-btn:hover {
+            background: #465d75;
+        }
+
+        .btn-op {
+            background: #f39c12;
+        }
+
+        .btn-equal {
+            background: #27ae60;
+            grid-column: span 2;
+        }
+
+        .btn-clear {
+            background: #e74c3c;
+            grid-column: span 2;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-logo-group">
+        <img src="logo.jpeg" alt="Logo" class="logo-redonda">
+        <span class="logo-titulo">Toda Chic Modas</span>
+    </div>
+
+    <div class="calculator">
+        <div class="calc-header">
+            <input type="text" id="display" class="calc-display" disabled value="0">
+            <button class="btn-toggle-hist" onclick="toggleHistorico()" title="Ver Histórico">🕒</button>
+        </div>
+
+        <!-- Interface de Botões -->
+        <div id="calc-main-ui">
+            <div class="calc-buttons">
+                <button class="calc-btn btn-clear" onclick="clearDisplay()">C</button>
+                <button class="calc-btn btn-op" onclick="appendToDisplay('%')">%</button>
+                <button class="calc-btn btn-op" onclick="appendToDisplay('/')">/</button>
+
+                <button class="calc-btn" onclick="appendToDisplay('7')">7</button>
+                <button class="calc-btn" onclick="appendToDisplay('8')">8</button>
+                <button class="calc-btn" onclick="appendToDisplay('9')">9</button>
+                <button class="calc-btn btn-op" onclick="appendToDisplay('*')">×</button>
+
+                <button class="calc-btn" onclick="appendToDisplay('4')">4</button>
+                <button class="calc-btn" onclick="appendToDisplay('5')">5</button>
+                <button class="calc-btn" onclick="appendToDisplay('6')">6</button>
+                <button class="calc-btn btn-op" onclick="appendToDisplay('-')">-</button>
+
+                <button class="calc-btn" onclick="appendToDisplay('1')">1</button>
+                <button class="calc-btn" onclick="appendToDisplay('2')">2</button>
+                <button class="calc-btn" onclick="appendToDisplay('3')">3</button>
+                <button class="calc-btn btn-op" onclick="appendToDisplay('+')">+</button>
+
+                <button class="calc-btn" onclick="appendToDisplay('0')">0</button>
+                <button class="calc-btn" onclick="appendToDisplay('.')">.</button>
+                <button class="calc-btn btn-equal" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <!-- Interface de Histórico (Escondida por padrão) -->
+        <div id="historico-view" style="display: none;">
+            <div class="hist-header">
+                <span>Histórico</span>
+            </div>
+            <ul id="lista-historico"></ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Cadastro de Vendas</h2>
+
+        <form id="venda-form">
+            <div class="grid-form">
+                <input type="text" id="cliente" placeholder="Cliente" required>
+                <input type="date" id="data" required>
+                <textarea id="item" placeholder="Item comprado" required></textarea>
+                <input type="number" id="valor" placeholder="Valor" step="0.01" min="0" required>
+
+                <select id="parcelamento">
+                    <option value="À vista">À vista</option>
+                    <option value="2x">2x</option>
+                    <option value="3x">3x</option>
+                    <option value="4x">4x</option>
+                </select>
+
+                <div class="checkbox-row">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="pago" style="width:auto;">
+                        <label for="pago">Já está pago?</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="acerto" style="width:auto;">
+                        <label for="acerto">Acerto</label>
+                    </div>
+                </div>
+
+                <textarea id="obs1" class="full-width" placeholder="Observação"></textarea>
+            </div>
+
+            <div class="actions-bar">
+                <button type="submit" class="btn-save" id="btnSalvar">Salvar Venda</button>
+                <button type="button" class="btn-export" onclick="exportarDados()">Exportar</button>
+                <input type="file" id="importar-file" style="display:none" accept=".csv"
+                    onchange="importarDados(event)">
+                <button type="button" class="btn-import"
+                    onclick="document.getElementById('importar-file').click()">Importar</button>
+            </div>
+        </form>
+
+        <h3>Vendas Registradas</h3>
+
+        <div class="search-container">
+            <input type="text" id="busca-cliente" placeholder="Filtrar por nome do cliente..." oninput="exibirVendas()">
+        </div>
+
+        <div class="table-container">
+            <table id="vendas-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Item</th>
+                        <th>Valor</th>
+                        <th>Parcelamento</th>
+                        <th>Status</th>
+                        <th>Observação</th>
+                        <th>Acerto</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="customModal"
+        style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+        <div
+            style="background:white; padding:20px; border-radius:12px; max-width:500px; width:90%; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position:relative; animation: fadeIn 0.3s;">
+            <h3 id="modalTitle"
+                style="margin-top:0; color:var(--primary); border-bottom: 2px solid var(--light); padding-bottom:10px;">
+                Detalhes</h3>
+            <p id="modalText"
+                style="white-space: pre-wrap; word-wrap: break-word; line-height:1.6; color:#333; margin: 20px 0;"></p>
+            <button onclick="fecharModal()"
+                style="background:var(--primary); width:100%; padding:12px; border-radius:6px; color:white; font-weight:bold; border:none; cursor:pointer;">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('venda-form');
+        const tableBody = document.querySelector('#vendas-table tbody');
+        const btnSalvar = document.getElementById('btnSalvar');
+        let editandoId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            exibirVendas();
+            restaurarFormulario();
+        });
+
+        const camposFormulario = ['cliente', 'data', 'item', 'valor', 'parcelamento', 'pago', 'acerto', 'obs1'];
+
+        camposFormulario.forEach(id => {
+            const campo = document.getElementById(id);
+            if (campo) {
+                campo.addEventListener('input', salvarRascunho);
+                campo.addEventListener('change', salvarRascunho);
+            }
+        });
+
+        function gerarIdUnico() { return crypto.randomUUID(); }
+
+        function salvarRascunho() {
+            const rascunho = obterDadosFormulario();
+            localStorage.setItem('rascunhoVenda', JSON.stringify(rascunho));
+        }
+
+        function restaurarFormulario() {
+            const rascunho = JSON.parse(localStorage.getItem('rascunhoVenda') || 'null');
+            if (!rascunho) return;
+            preencherFormulario(rascunho);
+        }
+
+        function obterDadosFormulario() {
+            return {
+                cliente: document.getElementById('cliente').value.trim(),
+                data: document.getElementById('data').value,
+                item: document.getElementById('item').value.trim(),
+                valor: document.getElementById('valor').value,
+                parcelamento: document.getElementById('parcelamento').value,
+                pago: document.getElementById('pago').checked,
+                acerto: document.getElementById('acerto').checked,
+                obs1: document.getElementById('obs1').value.trim()
+            };
+        }
+
+        function preencherFormulario(venda) {
+            document.getElementById('cliente').value = venda.cliente || '';
+            document.getElementById('data').value = venda.data || '';
+            document.getElementById('item').value = venda.item || '';
+            document.getElementById('valor').value = venda.valor || '';
+            document.getElementById('parcelamento').value = venda.parcelamento || 'À vista';
+            document.getElementById('pago').checked = venda.pago || false;
+            document.getElementById('acerto').checked = venda.acerto || false;
+            document.getElementById('obs1').value = venda.obs1 || '';
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const venda = { id: editandoId || gerarIdUnico(), ...obterDadosFormulario() };
+            let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+
+            if (editandoId) {
+                vendas = vendas.map(v => v.id === editandoId ? venda : v);
+                editandoId = null;
+                btnSalvar.innerHTML = 'Salvar Venda';
+            } else {
+                vendas.push(venda);
+            }
+
+            localStorage.setItem('vendas', JSON.stringify(vendas));
+            localStorage.removeItem('rascunhoVenda');
+            form.reset();
+            document.getElementById('parcelamento').value = 'À vista';
+            exibirVendas();
+        });
+
+        function exibirVendas() {
+            const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+            const termoBusca = document.getElementById('busca-cliente').value.toLowerCase();
+            tableBody.innerHTML = '';
+
+            const vendasFiltradas = vendas.filter(venda => venda.cliente.toLowerCase().includes(termoBusca));
+
+            if (vendasFiltradas.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 9;
+                td.className = 'vazio';
+                td.textContent = termoBusca ? 'Nenhum cliente encontrado.' : 'Nenhuma venda registrada.';
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+                return;
+            }
+
+            vendasFiltradas.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            vendasFiltradas.forEach(venda => {
+                const tr = document.createElement('tr');
+                tr.appendChild(criarTd(venda.cliente));
+                tr.appendChild(criarTd(formatarData(venda.data)));
+                tr.appendChild(criarObservacaoTd(venda.item, 'item'));
+                tr.appendChild(criarTd(formatarMoeda(venda.valor)));
+                tr.appendChild(criarTd(venda.parcelamento));
+
+                const statusTd = document.createElement('td');
+                statusTd.className = venda.pago ? 'status-pago' : 'status-pendente';
+                statusTd.textContent = venda.pago ? 'Pago' : 'Pendente';
+                tr.appendChild(statusTd);
+
+               tr.appendChild(criarObservacaoTd(venda.obs1, 'obs'));
+
+                const acertoTd = document.createElement('td');
+                acertoTd.className = venda.acerto ? 'acerto-acertado' : 'acerto-pendente';
+                acertoTd.textContent = venda.acerto ? 'Acertado' : 'Pendente';
+                tr.appendChild(acertoTd);
+
+                const acoesTd = document.createElement('td');
+                const acoesDiv = document.createElement('div');
+                acoesDiv.className = 'acoes';
+
+                const btnEditar = document.createElement('button');
+                btnEditar.className = 'btn-edit';
+                btnEditar.textContent = 'Editar';
+                btnEditar.onclick = () => editarVenda(venda.id);
+
+                const btnExcluir = document.createElement('button');
+                btnExcluir.className = 'btn-delete';
+                btnExcluir.textContent = 'Excluir';
+                btnExcluir.onclick = () => removerVenda(venda.id);
+
+                acoesDiv.appendChild(btnEditar);
+                acoesDiv.appendChild(btnExcluir);
+                acoesTd.appendChild(acoesDiv);
+                tr.appendChild(acoesTd);
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function criarTd(texto) {
+            const td = document.createElement('td');
+            td.textContent = texto;
+            return td;
+        }
+
+        // Substitua a função mostrarObservacao antiga por esta:
+        function mostrarObservacao(texto, titulo = 'Observação') {
+            if (!texto || texto.trim() === '') return;
+
+            document.getElementById('modalTitle').textContent = titulo;
+            document.getElementById('modalText').textContent = texto;
+            document.getElementById('customModal').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        // Fechar o modal se clicar fora dele
+        window.onclick = function (event) {
+            const modal = document.getElementById('customModal');
+            if (event.target == modal) {
+                fecharModal();
+            }
+        }
+
+        // Atualize a função criarObservacaoTd para passar o título correto:
+        function criarObservacaoTd(texto, tipo) {
+            const td = document.createElement('td');
+            const div = document.createElement('div');
+            div.className = 'obs-texto';
+            div.textContent = texto || '-';
+            // Define se o título do modal será "Item" ou "Observação"
+            const tituloModal = tipo === 'item' ? 'Item Comprado' : 'Observação';
+            div.onclick = () => mostrarObservacao(texto, tituloModal);
+            td.appendChild(div);
+            return td;
+        }
+
+        function editarVenda(id) {
+            const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+            const venda = vendas.find(v => v.id === id);
+            if (!venda) return;
+            preencherFormulario(venda);
+            editandoId = id;
+            btnSalvar.innerHTML = 'Atualizar Venda';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function removerVenda(id) {
+            if (confirm('Tem certeza que deseja excluir este registro?')) {
+                let vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+                vendas = vendas.filter(v => v.id !== id);
+                localStorage.setItem('vendas', JSON.stringify(vendas));
+                exibirVendas();
+            }
+        }
+
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function formatarData(dataString) {
+            if (!dataString) return '-';
+            const partes = dataString.split('-');
+            const anoCurto = partes[0].slice(-2);
+            return `${partes[2]}/${partes[1]}/${anoCurto}`;
+        }
+
+        async function exportarDados() {
+            const vendas = JSON.parse(localStorage.getItem('vendas') || '[]');
+            if (vendas.length === 0) return alert('Sem dados.');
+            let csv = 'Cliente,Data,Item,Valor,Parcelamento,Status,Observacao,Acerto\n';
+            vendas.forEach(v => {
+                csv += `"${v.cliente}","${v.data}","${v.item}","${v.valor}","${v.parcelamento}","${v.pago ? 'Pago' : 'Pendente'}","${v.obs1 || ''}","${v.acerto ? 'Sim' : 'Não'}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'vendas.csv';
+            link.click();
+        }
+
+        function importarDados(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const texto = e.target.result;
+                    const linhas = parseCSV(texto);
+                    linhas.shift();
+                    const novasVendas = [];
+                    linhas.forEach(colunas => {
+                        if (colunas.length < 8) return;
+                        novasVendas.push({
+                            id: crypto.randomUUID(),
+                            cliente: colunas[0].replace(/"/g, ''),
+                            data: colunas[1].replace(/"/g, ''),
+                            item: colunas[2].replace(/"/g, ''),
+                            valor: colunas[3].replace(/"/g, ''),
+                            parcelamento: colunas[4].replace(/"/g, ''),
+                            pago: colunas[5].replace(/"/g, '') === 'Pago',
+                            obs1: colunas[6].replace(/"/g, ''),
+                            acerto: colunas[7].replace(/"/g, '') === 'Sim'
+                        });
+                    });
+                    if (confirm('Deseja substituir os dados atuais?')) {
+                        localStorage.setItem('vendas', JSON.stringify(novasVendas));
+                        exibirVendas();
+                        alert('Importado com sucesso!');
+                    }
+                } catch (erro) { alert('Erro ao importar o arquivo.'); }
+            };
+            reader.readAsText(arquivo);
+        }
+
+        function parseCSV(texto) {
+            const linhas = [];
+            let linha = [];
+            let valor = '';
+            let dentroAspas = false;
+            for (let i = 0; i < texto.length; i++) {
+                const caractere = texto[i];
+                if (caractere === '"') {
+                    if (dentroAspas && texto[i + 1] === '"') { valor += '"'; i++; } else dentroAspas = !dentroAspas;
+                } else if (caractere === ',' && !dentroAspas) {
+                    linha.push(valor); valor = '';
+                } else if ((caractere === '\n' || caractere === '\r') && !dentroAspas) {
+                    if (valor || linha.length > 0) { linha.push(valor); linhas.push(linha); linha = []; valor = ''; }
+                } else valor += caractere;
+            }
+            if (valor || linha.length > 0) { linha.push(valor); linhas.push(linha); }
+            return linhas;
+        }
+
+
+        // Lógica da Calculadora com Histórico
+        const display = document.getElementById('display');
+        let historicoContas = JSON.parse(localStorage.getItem('historicoCalculadora') || '[]');
+
+        function appendToDisplay(input) {
+            if (display.value === "0" && input !== '.') {
+                display.value = input;
+            } else {
+                display.value += input;
+            }
+        }
+
+        function clearDisplay() {
+            display.value = "0";
+        }
+
+        function calculate() {
+            try {
+                let expressaoOriginal = display.value;
+                let expressaoParaEval = expressaoOriginal;
+
+                // Trata a porcentagem
+                if (expressaoParaEval.includes('%')) {
+                    expressaoParaEval = expressaoParaEval.replace(/(\d+)([\+\-\*\/])(\d+)%/g, (match, p1, op, p2) => {
+                        const val1 = parseFloat(p1);
+                        const val2 = parseFloat(p2) / 100;
+                        if (op === '+' || op === '-') return `${val1} ${op} (${val1} * ${val2})`;
+                        return `${val1} ${op} ${val2}`;
+                    });
+                    expressaoParaEval = expressaoParaEval.replace(/(\d+)%/g, "($1/100)");
+                }
+
+                let resultado = eval(expressaoParaEval);
+                display.value = resultado;
+
+                // Salva no histórico
+                historicoContas.unshift(`${expressaoOriginal} = ${resultado}`);
+                if (historicoContas.length > 15) historicoContas.pop(); // Limita a 15 itens
+                localStorage.setItem('historicoCalculadora', JSON.stringify(historicoContas));
+
+            } catch (error) {
+                display.value = "Erro";
+                setTimeout(clearDisplay, 1500);
+            }
+        }
+
+        function toggleHistorico() {
+            const mainUI = document.getElementById('calc-main-ui');
+            const histUI = document.getElementById('historico-view');
+            const lista = document.getElementById('lista-historico');
+
+            if (histUI.style.display === 'none') {
+                // Abre o histórico
+                mainUI.style.display = 'none';
+                histUI.style.display = 'flex';
+
+                // Gera a lista
+                lista.innerHTML = historicoContas.length > 0
+                    ? historicoContas.map(item => `<li>${item}</li>`).join('')
+                    : '<li style="text-align:center; color:#95a5a6; border:none;">Vazio</li>';
+            } else {
+                // Volta para a calculadora
+                mainUI.style.display = 'block';
+                histUI.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>

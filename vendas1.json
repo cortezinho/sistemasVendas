@@ -1,0 +1,222 @@
+[
+    {
+        "id": "e4a1b2c3-d4e5-4f6a-8b9c-0d1e2f3a4b5c",
+        "cliente": "Marcos Silva",
+        "data": "2026-05-14",
+        "item": "Tênis Esportivo",
+        "valor": "250",
+        "parcelamento": "5x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "PARCELAS:\nMAIO - R$50,00 - \nJUNHO - R$50,00 - \nJULHO - R$50,00 - \nAGOSTO - R$50,00 - \nSETEMBRO - R$50,00 -"
+    },
+    {
+        "id": "f5b2c3d4-e5f6-4a7b-9c0d-1e2f3a4b5c6d",
+        "cliente": "Juliana Costa",
+        "data": "2026-05-15",
+        "item": "Bolsa de Couro",
+        "valor": "180",
+        "parcelamento": "3x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Pagamento à vista com desconto aplicado"
+    },
+    {
+        "id": "a1b2c3d4-e5f6-4078-9012-34567890abcd",
+        "cliente": "Ricardo Oliveira",
+        "data": "2026-05-15",
+        "item": "Camiseta Polo",
+        "valor": "85",
+        "parcelamento": "1x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Entregue"
+    },
+    {
+        "id": "b2c3d4e5-f6a7-4189-a123-45678901bcde",
+        "cliente": "Beatriz Souza",
+        "data": "2026-05-16",
+        "item": "Saia Midi",
+        "valor": "120",
+        "parcelamento": "2x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "Aguardando primeira parcela em Junho"
+    },
+    {
+        "id": "c3d4e5f6-a7b8-4290-b234-56789012cdef",
+        "cliente": "Lucas Mendes",
+        "data": "2026-05-16",
+        "item": "Relógio",
+        "valor": "450",
+        "parcelamento": "6x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "PARCELAS:\nJUN a NOV - R$75,00/mês"
+    },
+    {
+        "id": "d4e5f6a7-b8c9-4301-c345-67890123def0",
+        "cliente": "Fernanda Lima",
+        "data": "2026-05-17",
+        "item": "Óculos de Sol",
+        "valor": "210",
+        "parcelamento": "3x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "teste"
+    },
+    {
+        "id": "e5f6a7b8-c9d0-4412-d456-78901234ef01",
+        "cliente": "Thiago Rocha",
+        "data": "2026-05-17",
+        "item": "Short Cargo",
+        "valor": "90",
+        "parcelamento": "1x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Pix realizado"
+    },
+    {
+        "id": "f6a7b8c9-d0e1-4523-e567-89012345f012",
+        "cliente": "Amanda Pereira",
+        "data": "2026-05-18",
+        "item": "Jaqueta Jeans",
+        "valor": "280",
+        "parcelamento": "4x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "PARCELAS:\nJUNHO - R$70,00 - \nJULHO - R$70,00 - \nAGOSTO - R$70,00 - \nSETEMBRO - R$70,00 -"
+    },
+    {
+        "id": "01234567-89ab-4cde-af01-23456789abcd",
+        "cliente": "Bruno Alves",
+        "data": "2026-05-18",
+        "item": "Cinto de Couro",
+        "valor": "55",
+        "parcelamento": "1x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Dinheiro"
+    },
+    {
+        "id": "12345678-9abc-4def-b012-34567890bcde",
+        "cliente": "Camila Vieira",
+        "data": "2026-05-19",
+        "item": "Vestido Longo",
+        "valor": "420",
+        "parcelamento": "4x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "Ajuste na barra solicitado"
+    },
+    {
+        "id": "23456789-abcd-4ef0-c123-45678901cdef",
+        "cliente": "Diego Santos",
+        "data": "2026-05-19",
+        "item": "Sapato Social",
+        "valor": "320",
+        "parcelamento": "3x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Pago antecipado"
+    },
+    {
+        "id": "34567890-bcde-4f01-d234-56789012def0",
+        "cliente": "Elaine Castro",
+        "data": "2026-05-20",
+        "item": "Conjunto Moletom",
+        "valor": "190",
+        "parcelamento": "2x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "Pendente"
+    },
+    {
+        "id": "45678901-cdef-4012-e345-67890123ef01",
+        "cliente": "Fabio Junior",
+        "data": "2026-05-20",
+        "item": "Boné",
+        "valor": "60",
+        "parcelamento": "1x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Retirada em mãos"
+    },
+    {
+        "id": "56789012-def0-4123-f456-78901234f012",
+        "cliente": "Gisele Bünd",
+        "data": "2026-05-21",
+        "item": "Scarpin",
+        "valor": "290",
+        "parcelamento": "3x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "PARCELAS: R$96,66"
+    },
+    {
+        "id": "67890123-ef01-4234-a567-890123450123",
+        "cliente": "Hugo Leonardo",
+        "data": "2026-05-21",
+        "item": "Calça Jeans",
+        "valor": "150",
+        "parcelamento": "2x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Sem observações"
+    },
+    {
+        "id": "78901234-f012-4345-b678-901234561234",
+        "cliente": "Iara Gomes",
+        "data": "2026-05-22",
+        "item": "Colar Prata",
+        "valor": "130",
+        "parcelamento": "2x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "Presente"
+    },
+    {
+        "id": "89012345-0123-4456-c789-012345672345",
+        "cliente": "João Paulo",
+        "data": "2026-05-22",
+        "item": "Bermuda Jeans",
+        "valor": "110",
+        "parcelamento": "1x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Venda balcão"
+    },
+    {
+        "id": "90123456-1234-4567-d890-123456783456",
+        "cliente": "Karina Lopes",
+        "data": "2026-05-23",
+        "item": "Blazer Feminino",
+        "valor": "380",
+        "parcelamento": "4x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "Aguardando confirmação de estoque"
+    },
+    {
+        "id": "01234567-2345-4678-e901-234567894567",
+        "cliente": "Leandro Lima",
+        "data": "2026-05-23",
+        "item": "Meias Kit 3",
+        "valor": "45",
+        "parcelamento": "1x",
+        "pago": true,
+        "acerto": true,
+        "obs1": "Venda rápida"
+    },
+    {
+        "id": "12345678-3456-4789-f012-345678905678",
+        "cliente": "Monique Silva",
+        "data": "2026-05-24",
+        "item": "Macacão",
+        "valor": "220",
+        "parcelamento": "2x",
+        "pago": false,
+        "acerto": false,
+        "obs1": "PARCELAS: JUN - R$110 / JUL - R$110"
+    }
+]
