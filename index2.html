@@ -682,7 +682,11 @@
             const blob = new Blob([dados], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = `vendas_todachic_${new Date().getTime()}.json`;
+
+            const dataHoje = new Date().toISOString().slice(0, 10).split('-');
+            const dataFormatada = `${dataHoje[2]}-${dataHoje[1]}-${dataHoje[0]}`
+
+            a.href = url; a.download = `vendas_todachic_${dataFormatada}.json`;
             a.click();
         }
 
