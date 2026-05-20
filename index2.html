@@ -97,7 +97,8 @@
             border: none;
             border-radius: 6px;
             color: #333;
-            width: 10px; /* Evita estouro de layout em telas menores */
+            width: 10px;
+            /* Evita estouro de layout em telas menores */
         }
 
         .btn-toggle-hist {
@@ -161,7 +162,8 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            min-width: 0; /* Evita que flex-itens quebrem o grid externo */
+            min-width: 0;
+            /* Evita que flex-itens quebrem o grid externo */
         }
 
         .card {
@@ -221,21 +223,25 @@
             padding: 10px;
             border-radius: 8px;
             font-weight: bold;
-            /*flex-wrap: wrap;*/ /* Garante que os checkboxes quebrem linha se necessário */
+            /*flex-wrap: wrap;*/
+            /* Garante que os checkboxes quebrem linha se necessário */
         }
 
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
+        .checkbox-group,
         .checkbox-group-right {
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            transition: color 0.3s ease;
+            /* Cor padrão inicial (Desmarcado) */
+            color: var(--danger);
+        }
+
+        /* Aplica a cor verde se o input de dentro do label estiver marcado (:checked) */
+        .checkbox-group:has(input:checked),
+        .checkbox-group-right:has(input:checked) {
+            color: var(--secondary);
         }
 
         /* Ajuste do divisor para funcionar bem em resoluções menores */
@@ -311,7 +317,8 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 850px; /* Mantém a legibilidade dos dados sem esmagar as colunas */
+            min-width: 850px;
+            /* Mantém a legibilidade dos dados sem esmagar as colunas */
         }
 
         th,
@@ -379,13 +386,15 @@
         /* MEDIA QUERIES PARA RESPONSIVIDADE EM QUALQUER TELA */
         @media (max-width: 1024px) {
             body {
-                grid-template-columns: 1fr; /* Transforma o layout em uma coluna fluida para notebooks menores e tablets */
+                grid-template-columns: 1fr;
+                /* Transforma o layout em uma coluna fluida para notebooks menores e tablets */
                 padding: 15px;
                 gap: 15px;
             }
 
             .sidebar {
-                order: 2; /* Move a sidebar para baixo em telas menores se necessário, ou mantém no fluxo */
+                order: 2;
+                /* Move a sidebar para baixo em telas menores se necessário, ou mantém no fluxo */
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                 gap: 20px;
@@ -406,16 +415,17 @@
             .sidebar {
                 grid-template-columns: 1fr;
             }
-            
+
             .card {
                 padding: 15px;
             }
 
             button {
-                width: 100%; /* Botões ocupam largura total em telas muito pequenas (smartphones) */
+                width: 100%;
+                /* Botões ocupam largura total em telas muito pequenas (smartphones) */
                 text-align: center;
             }
-            
+
             .actions-bar {
                 flex-direction: column;
             }
@@ -741,15 +751,15 @@
 
                 const resultado = eval(expressaoParaEval);
                 const resultadoFormatado = Number.isInteger(resultado) ? resultado : parseFloat(resultado.toFixed(2));
-                
+
                 disp.value = resultadoFormatado;
 
                 historico.unshift(`${expressaoOriginal} = ${resultadoFormatado}`);
                 historico = historico.slice(0, 15);
                 localStorage.setItem('hist_calc', JSON.stringify(historico));
-            } catch (e) { 
-                disp.value = "Erro"; 
-                setTimeout(clearDisplay, 1500); 
+            } catch (e) {
+                disp.value = "Erro";
+                setTimeout(clearDisplay, 1500);
             }
         }
 
