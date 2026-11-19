@@ -1,0 +1,16 @@
+# Dependências do Node / Electron
+node_modules/
+
+# Pasta de compilação e executáveis gerados
+dist/
+*.exe
+*.zip
+
+# Banco de dados local e backups (protege os dados reais das vendas)
+banco_de_vendas.json
+backup_*.json
+
+# Arquivos temporários do Windows e logs
+Thumbs.db
+desktop.ini
+npm-debug.log*
